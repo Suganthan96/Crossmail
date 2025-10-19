@@ -34,50 +34,56 @@ const NETWORKS = {
 /**
  * Get provider for specific network with fallback RPCs
  */
-export function getProvider(network = 'sepolia') {
+export async function getProvider(network = 'sepolia') {
   const networkConfig = NETWORKS[network];
   if (!networkConfig) {
     throw new Error(`Network ${network} not supported`);
   }
   
-  // Try multiple RPC endpoints for better reliability
+  // Try multiple RPC endpoints for better reliability with timeouts
   const rpcUrls = network === 'sepolia' ? [
     ...(process.env.ALCHEMY_API_KEY && process.env.ALCHEMY_API_KEY !== 'your_alchemy_api_key_here' 
        ? [`https://eth-sepolia.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`] 
        : []),
-    ...(process.env.INFURA_API_KEY && process.env.INFURA_API_KEY !== 'your_infura_api_key_here'
-       ? [`https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`]
-       : []),
-    'https://1rpc.io/sepolia',
+    'https://ethereum-sepolia-rpc.publicnode.com',
     'https://rpc.ankr.com/eth_sepolia',
-    'https://sepolia.gateway.tenderly.co',
-    'https://ethereum-sepolia-rpc.publicnode.com'
+    'https://1rpc.io/sepolia',
+    'https://sepolia.gateway.tenderly.co'
   ] : [networkConfig.rpc];
   
   // Try each RPC until one works
   for (const rpc of rpcUrls) {
     try {
-      return new ethers.JsonRpcProvider(rpc);
+      console.log(`🔗 Trying RPC: ${rpc}`);
+      const provider = new ethers.JsonRpcProvider(rpc, undefined, {
+        timeout: 30000, // 30 second timeout
+        retryLimit: 3
+      });
+      
+      // Test the connection
+      await provider.getNetwork();
+      console.log(`✅ Connected to RPC: ${rpc}`);
+      return provider;
     } catch (error) {
-      console.log(`RPC ${rpc} failed, trying next...`);
+      console.log(`❌ RPC ${rpc} failed: ${error.message}`);
       continue;
     }
   }
   
   // Fallback to original if all fail
-  return new ethers.JsonRpcProvider(networkConfig.rpc);
+  throw new Error('All RPC endpoints failed');
 }
 
 /**
  * Get wallet instance
  */
-export function getWallet(network = 'sepolia') {
+export async function getWallet(network = 'sepolia') {
   const privateKey = process.env.WALLET_PRIVATE_KEY;
   if (!privateKey) {
     throw new Error('WALLET_PRIVATE_KEY not set in environment variables');
   }
   
-  const provider = getProvider(network);
+  const provider = await getProvider(network);
   return new ethers.Wallet(privateKey, provider);
 }
 
@@ -103,7 +109,7 @@ export function getWalletAddress() {
  * Get wallet balance
  */
 export async function getBalance(address, network = 'sepolia') {
-  const provider = getProvider(network);
+  const provider = await getProvider(network);
   const balance = await provider.getBalance(address);
   return ethers.formatEther(balance);
 }
@@ -112,7 +118,7 @@ export async function getBalance(address, network = 'sepolia') {
  * Send transaction
  */
 export async function sendTransaction(to, amount, network = 'sepolia') {
-  const wallet = getWallet(network);
+  const wallet = await getWallet(network);
   
   const tx = await wallet.sendTransaction({
     to: to,
@@ -126,7 +132,7 @@ export async function sendTransaction(to, amount, network = 'sepolia') {
  * Get transaction details
  */
 export async function getTransaction(txHash, network = 'sepolia') {
-  const provider = getProvider(network);
+  const provider = await getProvider(network);
   const tx = await provider.getTransaction(txHash);
   return tx;
 }

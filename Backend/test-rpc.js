@@ -7,7 +7,7 @@ async function testRPCConnection() {
   console.log('🧪 Testing RPC Connection...\n');
   
   try {
-    const provider = getProvider('sepolia');
+    const provider = await getProvider('sepolia');
     const network = await provider.getNetwork();
     console.log('✅ RPC Connection successful!');
     console.log(`   Network: ${network.name} (Chain ID: ${network.chainId})`);

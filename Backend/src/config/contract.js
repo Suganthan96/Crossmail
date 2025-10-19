@@ -58,8 +58,8 @@ const CONTRACT_ADDRESS = process.env.SEND_ETH_CONTRACT_ADDRESS;
 /**
  * Get contract instance
  */
-export function getContract(network = 'sepolia') {
-  const wallet = getWallet(network);
+export async function getContract(network = 'sepolia') {
+  const wallet = await getWallet(network);
   return new ethers.Contract(CONTRACT_ADDRESS, SEND_ETH_ABI, wallet);
 }
 
@@ -68,7 +68,7 @@ export function getContract(network = 'sepolia') {
  */
 export async function sendETHViaContract(to, amount, network = 'sepolia') {
   try {
-    const contract = getContract(network);
+    const contract = await getContract(network);
     const amountInWei = ethers.parseEther(amount.toString());
     
     console.log(`Sending ${amount} ETH to ${to} via contract...`);
@@ -118,14 +118,14 @@ export async function sendETHViaContract(to, amount, network = 'sepolia') {
  */
 export async function estimateContractGas(to, amount, network = 'sepolia') {
   try {
-    const contract = getContract(network);
+    const contract = await getContract(network);
     const amountInWei = ethers.parseEther(amount.toString());
     
     const gasEstimate = await contract.sendETH.estimateGas(to, {
       value: amountInWei
     });
     
-    const provider = getProvider(network);
+    const provider = await getProvider(network);
     const feeData = await provider.getFeeData();
     const gasPrice = feeData.gasPrice;
     const gasCost = gasEstimate * gasPrice;

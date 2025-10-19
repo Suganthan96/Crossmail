@@ -9,6 +9,7 @@ import gmailRoutes from './routes/gmail.js';
 import transactionRoutes from './routes/transaction.js';
 import emailTriggerRoutes from './routes/email-trigger.js';
 import simpleAuthRoutes from './routes/simple-auth.js';
+import processedEmailsRoutes from './routes/processed-emails.js';
 
 // Load environment variables
 dotenv.config();
@@ -43,6 +44,7 @@ app.use('/api/gmail', gmailRoutes);
 app.use('/api/transaction', transactionRoutes);
 app.use('/api/email-trigger', emailTriggerRoutes);
 app.use('/api/simple-auth', simpleAuthRoutes);
+app.use('/api/processed-emails', processedEmailsRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
