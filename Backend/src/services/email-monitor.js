@@ -174,9 +174,22 @@ class EmailMonitorService {
    * Extract amount from text
    */
   extractAmount(text) {
-    const amountRegex = /(\d+\.?\d*)\s*(ETH|eth|Eth)?/;
-    const match = text.match(amountRegex);
-    return match ? parseFloat(match[1]) : 0.01; // Default to 0.01 ETH
+    // More robust amount extraction
+    const patterns = [
+      /(\d+\.?\d*)\s*ETH/i,                    // "0.001 ETH"
+      /Send\s+.*?(\d+\.?\d*)/i,               // "Send Sepolia ETH 0.001"
+      /(\d+\.?\d*)\s*sepolia/i,               // "0.001 sepolia"
+      /(\d+\.?\d*)\s*(?:eth|sepolia|ether)/i  // Generic patterns
+    ];
+    
+    for (const pattern of patterns) {
+      const match = text.match(pattern);
+      if (match && parseFloat(match[1]) > 0) {
+        return parseFloat(match[1]);
+      }
+    }
+    
+    return 0.001; // Default to 0.001 ETH if no amount found
   }
 
   /**

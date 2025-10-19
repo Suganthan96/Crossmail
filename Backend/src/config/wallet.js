@@ -13,7 +13,7 @@ const NETWORKS = {
   },
   sepolia: {
     name: 'Sepolia Testnet',
-    rpc: 'https://rpc.sepolia.org',
+    rpc: 'https://eth-sepolia.g.alchemy.com/v2/demo',
     chainId: 11155111,
     explorer: 'https://sepolia.etherscan.io'
   },
@@ -32,13 +32,39 @@ const NETWORKS = {
 };
 
 /**
- * Get provider for specific network
+ * Get provider for specific network with fallback RPCs
  */
 export function getProvider(network = 'sepolia') {
   const networkConfig = NETWORKS[network];
   if (!networkConfig) {
     throw new Error(`Network ${network} not supported`);
   }
+  
+  // Try multiple RPC endpoints for better reliability
+  const rpcUrls = network === 'sepolia' ? [
+    ...(process.env.ALCHEMY_API_KEY && process.env.ALCHEMY_API_KEY !== 'your_alchemy_api_key_here' 
+       ? [`https://eth-sepolia.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`] 
+       : []),
+    ...(process.env.INFURA_API_KEY && process.env.INFURA_API_KEY !== 'your_infura_api_key_here'
+       ? [`https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`]
+       : []),
+    'https://1rpc.io/sepolia',
+    'https://rpc.ankr.com/eth_sepolia',
+    'https://sepolia.gateway.tenderly.co',
+    'https://ethereum-sepolia-rpc.publicnode.com'
+  ] : [networkConfig.rpc];
+  
+  // Try each RPC until one works
+  for (const rpc of rpcUrls) {
+    try {
+      return new ethers.JsonRpcProvider(rpc);
+    } catch (error) {
+      console.log(`RPC ${rpc} failed, trying next...`);
+      continue;
+    }
+  }
+  
+  // Fallback to original if all fail
   return new ethers.JsonRpcProvider(networkConfig.rpc);
 }
 
