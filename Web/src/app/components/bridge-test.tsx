@@ -44,79 +44,73 @@ export function BridgeTest() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen gap-4 p-4">
-      <h1 className="text-2xl font-bold">Nexus SDK</h1>
-
-      <BridgeButton
-        prefill={{
-          chainId: 421614,
-          token: 'USDC',
-          amount: '1', 
-        }}
-      >
-        {({ onClick, isLoading }) => (
-          <button
-            onClick={onClick}
-            disabled={isLoading}
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+    <div className="flex items-center justify-center min-h-screen gap-8 p-8">
+      {/* Left Container - Send 1 USDC Card */}
+      <div className="flex-1 flex items-center justify-center">
+        <div className="backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl p-8 shadow-2xl hover:bg-white/15 transition-all duration-300 w-full max-w-md">
+          <h3 className="text-2xl font-bold text-white mb-4 text-center">Transfer USDC</h3>
+          <p className="text-white/70 text-sm mb-6 text-center">Send USDC tokens across chains instantly</p>
+          <TransferButton
+            prefill={{
+              chainId: 11155420, 
+              token: 'USDC',
+              amount: '1',
+              recipient: '0x0754241982730db1ecf4a2c5e7839c1467f13c5e', 
+            }}
           >
-            {isLoading ? 'Bridging...' : 'Bridge 1 USDC to Arbitrum Sepolia'}
-          </button>
-        )}
-      </BridgeButton>
-
-      <TransferButton
-      prefill={{
-                  chainId: 11155420, 
-                     token: 'USDC',
-                       amount: '1',
-                     recipient: '0x0754241982730db1ecf4a2c5e7839c1467f13c5e', 
-                }}
-             >
-           {({ onClick, isLoading }) => (
-           <button onClick={onClick} disabled={isLoading}
-           className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50">
-            {isLoading ? 'Sending…' : 'Send 1 USDC'}
-          </button>
+            {({ onClick, isLoading }) => (
+              <button onClick={onClick} disabled={isLoading}
+                className="w-full px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                {isLoading ? 'Sending…' : 'Send 1 USDC'}
+              </button>
             )}
-        </TransferButton>
+          </TransferButton>
+        </div>
+      </div>
 
-       <BridgeAndExecuteButton
-          contractAddress="0xBfC91D59fdAA134A4ED45f7B584cAf96D7792Eff" 
-          contractAbi={
-        [
-        {
-        name: 'supply',
-        type: 'function',
-        stateMutability: 'nonpayable',
-        inputs: [
-          { name: 'asset', type: 'address' },
-          { name: 'amount', type: 'uint256' },
-          { name: 'onBehalfOf', type: 'address' },
-          { name: 'referralCode', type: 'uint16' },
-        ],
-        outputs: [],
-      },
-    ] as const
-  }
-  functionName="supply"
-  buildFunctionParams={(token, amount, chainId, userAddress) => {
-    const decimals = TOKEN_METADATA[token].decimals;
-    const amountWei = parseUnits(amount, decimals);
-    const tokenAddress = TOKEN_CONTRACT_ADDRESSES[token][chainId];
-    return {
-      functionParams: [tokenAddress, amountWei, userAddress, 0],
-    };
-  }}
-  prefill={{ toChainId: 421614, token: 'USDC' }}
->
-  {({ onClick, isLoading, disabled }) => (
-    <button onClick={onClick} disabled={isLoading || disabled}
-    className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50">
-      {isLoading ? 'Processing…' : 'Bridge & Supply to Aave'}
-    </button>
-  )}
-      </BridgeAndExecuteButton>
+      {/* Right Container - Bridge & Supply to Aave Card */}
+      <div className="flex-1 flex items-center justify-center">
+        <div className="backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl p-8 shadow-2xl hover:bg-white/15 transition-all duration-300 w-full max-w-md">
+          <h3 className="text-2xl font-bold text-white mb-4 text-center">Supply to Aave</h3>
+          <p className="text-white/70 text-sm mb-6 text-center">Bridge and supply tokens to Aave protocol</p>
+          <BridgeAndExecuteButton
+            contractAddress="0xBfC91D59fdAA134A4ED45f7B584cAf96D7792Eff" 
+            contractAbi={
+              [
+                {
+                  name: 'supply',
+                  type: 'function',
+                  stateMutability: 'nonpayable',
+                  inputs: [
+                    { name: 'asset', type: 'address' },
+                    { name: 'amount', type: 'uint256' },
+                    { name: 'onBehalfOf', type: 'address' },
+                    { name: 'referralCode', type: 'uint16' },
+                  ],
+                  outputs: [],
+                },
+              ] as const
+            }
+            functionName="supply"
+            buildFunctionParams={(token, amount, chainId, userAddress) => {
+              const decimals = TOKEN_METADATA[token].decimals;
+              const amountWei = parseUnits(amount, decimals);
+              const tokenAddress = TOKEN_CONTRACT_ADDRESSES[token][chainId];
+              return {
+                functionParams: [tokenAddress, amountWei, userAddress, 0],
+              };
+            }}
+            prefill={{ toChainId: 421614, token: 'USDC' }}
+          >
+            {({ onClick, isLoading, disabled }) => (
+              <button onClick={onClick} disabled={isLoading || disabled}
+                className="w-full px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                {isLoading ? 'Processing…' : 'Bridge & Supply to Aave'}
+              </button>
+            )}
+          </BridgeAndExecuteButton>
+        </div>
+      </div>
     </div>
   );
 }	

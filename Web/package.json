@@ -10,11 +10,13 @@
   },
   "dependencies": {
     "@avail-project/nexus-widgets": "^0.0.5",
+    "@react-three/fiber": "^9.4.0",
     "@tanstack/react-query": "^5.90.3",
     "connectkit": "^1.9.1",
     "next": "15.5.5",
     "react": "^19.2.0",
     "react-dom": "^19.1.0",
+    "three": "^0.180.0",
     "viem": "^2.38.2",
     "wagmi": "^2.18.1"
   },
@@ -24,6 +26,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/three": "^0.180.0",
     "eslint": "^9",
     "eslint-config-next": "15.5.5",
     "tailwindcss": "^4",
