@@ -1,14 +1,14 @@
 'use client';
 
 import { WagmiProvider, createConfig, http } from 'wagmi';
-import { mainnet,sepolia, base, arbitrum, arbitrumSepolia, optimism } from 'wagmi/chains';
+import { mainnet, sepolia, base, arbitrum, arbitrumSepolia, optimism, optimismSepolia } from 'wagmi/chains';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ConnectKitProvider, getDefaultConfig } from 'connectkit';
 import { NexusProvider } from '@avail-project/nexus-widgets';
 
 const config = createConfig(
   getDefaultConfig({
-    chains: [mainnet,sepolia, base, arbitrum, arbitrumSepolia, optimism],
+    chains: [mainnet, sepolia, base, arbitrum, arbitrumSepolia, optimism, optimismSepolia],
     transports: {
       [mainnet.id]: http(),
       [sepolia.id]: http(),
@@ -16,9 +16,10 @@ const config = createConfig(
       [arbitrum.id]: http(),
       [arbitrumSepolia.id]: http(),
       [optimism.id]: http(),
+      [optimismSepolia.id]: http(),
     },
     walletConnectProjectId: '7a6e6a1f7934519391a590f1b17504df', 
-    appName: 'Nexus Test',
+    appName: 'Crossmail',
   })
 );
 
