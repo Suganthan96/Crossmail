@@ -2,6 +2,128 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Custom Font Definition - Nasalization Rg */
+@font-face {
+  font-family: 'Nasalization';
+  src: url('/Nasalization Rg.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* CROSSMAIL Title Styling */
+.crossmail-title {
+  font-family: 'Nasalization', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-weight: normal;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "kern" 1, "liga" 0;
+  color: white;
+  display: inline-block;
+  text-align: center;
+  word-spacing: 0;
+  line-height: 1;
+  font-stretch: normal;
+  vertical-align: baseline;
+  height: 1em;
+}
+
+/* Container for perfect alignment */
+.crossmail-container {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0;
+  height: 1em;
+  line-height: 1;
+  position: relative;
+  width: auto;
+  min-width: fit-content;
+}
+
+/* Individual parts of CROSSMAIL */
+.crossmail-part {
+  display: inline-block !important;
+  height: 1em !important;
+  line-height: 1 !important;
+  vertical-align: baseline !important;
+  font-size: inherit !important;
+  font-family: inherit !important;
+  letter-spacing: inherit !important;
+  text-transform: inherit !important;
+  background: inherit !important;
+  background-size: inherit !important;
+  -webkit-background-clip: inherit !important;
+  -webkit-text-fill-color: inherit !important;
+  background-clip: inherit !important;
+  animation: inherit !important;
+  position: relative;
+  top: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/* Specific adjustment for CROSS word */
+.crossmail-cross {
+  height: 0.85em !important;
+  line-height: 0.85 !important;
+  transform: translateY(0.08em);
+  width: 5.5em; /* Fixed width for CROSS */
+  display: inline-block !important;
+  overflow: visible !important;
+}
+
+/* Keep MAIL at normal height with fixed width */
+.crossmail-mail {
+  height: 1em !important;
+  line-height: 1 !important;
+  width: 4em !important; /* Fixed width for MAIL */
+  display: inline-block !important;
+  overflow: visible !important;
+  text-align: left !important;
+  margin-left: -1em !important;
+}
+
+/* Force exact alignment for animated text components */
+.crossmail-title > div,
+.crossmail-title .text-type,
+.crossmail-title .shuffle-parent,
+.crossmail-title .text-type__content,
+.crossmail-title .shuffle-char,
+.crossmail-title .shuffle-char-wrapper {
+  height: 1em !important;
+  line-height: 1 !important;
+  vertical-align: baseline !important;
+  display: inline-block !important;
+  overflow: visible !important;
+}
+
+/* Ensure animated components inherit the crossmail styling */
+.crossmail-title * {
+  font-family: inherit !important;
+  font-weight: inherit !important;
+  letter-spacing: inherit !important;
+  text-transform: inherit !important;
+  font-variant-numeric: inherit !important;
+  font-feature-settings: inherit !important;
+  color: inherit !important;
+  line-height: 1 !important;
+  font-stretch: inherit !important;
+  vertical-align: baseline !important;
+  font-size: inherit !important;
+  height: 0.859em !important;
+  display: inline-block !important;
+}
+
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

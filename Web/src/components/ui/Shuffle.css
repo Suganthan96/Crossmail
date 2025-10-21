@@ -1,0 +1,68 @@
+/* Shuffle Component Styles */
+.shuffle-parent {
+  will-change: contents;
+  display: inline-block !important;
+  white-space: normal;
+  word-wrap: break-word;
+  will-change: transform;
+  line-height: 1 !important;
+  font-family: 'Nasalization', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  text-transform: uppercase;
+  visibility: hidden; /* hidden until initialized to avoid flash/jump */
+  vertical-align: baseline !important;
+  height: 1em !important;
+  overflow: visible !important;
+  position: relative;
+  top: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.shuffle-parent.is-ready {
+  visibility: visible;
+}
+
+.shuffle-char-wrapper {
+  display: inline-block !important;
+  overflow: visible !important;
+  vertical-align: baseline !important;
+  position: relative;
+  height: 1em !important;
+  line-height: 1 !important;
+  top: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.shuffle-char-wrapper > span {
+  display: inline-flex !important;
+  will-change: transform;
+  vertical-align: baseline !important;
+  line-height: 1 !important;
+  height: 1em !important;
+  align-items: baseline !important;
+  top: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.shuffle-char,
+.shuffle-word,
+.shuffle-line {
+  will-change: transform;
+  line-height: 1 !important;
+  display: inline-block !important;
+  text-align: center;
+  font-family: inherit;
+  font-weight: inherit;
+  font-size: inherit;
+  color: inherit;
+  text-transform: inherit;
+  letter-spacing: inherit;
+  vertical-align: baseline !important;
+  height: 1em !important;
+  position: relative;
+  top: 0;
+  margin: 0;
+  padding: 0;
+}

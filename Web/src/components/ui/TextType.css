@@ -1,0 +1,80 @@
+.text-type {
+  display: inline-block !important;
+  white-space: nowrap !important;
+  font-family: inherit !important;
+  font-weight: inherit !important;
+  font-size: inherit !important;
+  color: inherit !important;
+  text-transform: inherit !important;
+  letter-spacing: inherit !important;
+  background: inherit !important;
+  background-size: inherit !important;
+  -webkit-background-clip: inherit !important;
+  -webkit-text-fill-color: inherit !important;
+  background-clip: inherit !important;
+  animation: inherit !important;
+  line-height: 1 !important;
+  vertical-align: baseline !important;
+  height: 1em !important;
+  overflow: visible !important;
+  position: relative;
+  top: 0;
+  margin: 0;
+  padding: 0;
+  width: inherit !important;
+  max-width: inherit !important;
+  text-align: left !important;
+}
+
+.text-type__content {
+  font-family: inherit !important;
+  font-weight: inherit !important;
+  font-size: inherit !important;
+  color: inherit !important;
+  text-transform: inherit !important;
+  letter-spacing: inherit !important;
+  background: inherit !important;
+  background-size: inherit !important;
+  -webkit-background-clip: inherit !important;
+  -webkit-text-fill-color: inherit !important;
+  background-clip: inherit !important;
+  animation: inherit !important;
+  line-height: 1 !important;
+  vertical-align: baseline !important;
+  display: inline-block !important;
+  height: 1em !important;
+  position: relative;
+  top: 0;
+  margin: 0;
+  padding: 0;
+  /* Prevent layout shifts during animation */
+  white-space: nowrap !important;
+  overflow: visible !important;
+  width: auto !important;
+  text-align: left !important;
+}
+
+.text-type__cursor {
+  margin-left: 0.25rem;
+  display: inline-block !important;
+  opacity: 1;
+  font-family: inherit !important;
+  color: inherit !important;
+  background: inherit !important;
+  -webkit-background-clip: inherit !important;
+  -webkit-text-fill-color: inherit !important;
+  background-clip: inherit !important;
+  line-height: 1 !important;
+  vertical-align: baseline !important;
+  font-size: inherit !important;
+  height: 1em !important;
+  position: relative;
+  top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 0;
+}
+
+.text-type__cursor--hidden {
+  display: none;
+}
