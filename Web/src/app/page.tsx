@@ -187,7 +187,7 @@ export default function Home() {
           {activeTab === 'send' ? (
             <div className="text-center">
               <h2 className="text-white text-6xl font-bold mb-4" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>Transfer USDC</h2>
-              <p className="text-white/80 text-3xl mb-6" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
+              <p className="text-white/80 text-3xl mb-20" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
                 Send USDC tokens across chains instantly
               </p>
               <TransferButton
@@ -242,7 +242,7 @@ export default function Home() {
           ) : (
             <div className="text-center">
               <h2 className="text-white text-6xl font-bold mb-4" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>Supply to Aave</h2>
-              <p className="text-white/80 text-3xl mb-6" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
+              <p className="text-white/80 text-3xl mb-20" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
                 Bridge and supply tokens to Aave protocol
               </p>
               <BridgeAndExecuteButton
