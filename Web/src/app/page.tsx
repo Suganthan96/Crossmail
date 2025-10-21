@@ -3,12 +3,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { BridgeTest } from './components/bridge-test';
 import { WalletBridge } from './components/wallet-bridge';
-import { Boxes } from '@/components/ui/background-boxes';
-import { EvervaultCard, Icon } from '@/components/ui/evervault-card';
 import Shuffle from '@/components/ui/Shuffle';
 import TextType from '@/components/ui/TextType';
 import { LampBackground } from '@/components/ui/lamp-background';
 import { ParticlesBackground } from '@/components/ui/particles-background';
+import ModernCard, { FeatureItem } from '@/components/ui/futuristic-card';
 import { TransferButton, BridgeAndExecuteButton, TOKEN_METADATA, TOKEN_CONTRACT_ADDRESSES } from '@avail-project/nexus-widgets';
 import { parseUnits } from 'viem';
 import { ConnectKitButton } from 'connectkit';
@@ -121,49 +120,63 @@ export default function Home() {
         </header>
 
         {/* Content - Left Aligned Layout */}
-        <div className="relative z-10 flex items-start justify-start min-h-[calc(100vh-200px)] gap-8 px-8 pt-8">
+        <div className="relative z-10 flex items-start justify-start min-h-[calc(100vh-200px)] gap-8 px-2 pt-8">
           {activeTab === 'send' ? (
             <div className="flex gap-8">
               {/* Instructions Card - How to Send USDC */}
               <div className="w-80">
-                <div className="border border-white/20 dark:border-white/[0.2] flex flex-col items-start p-8 relative h-[30rem] rounded-3xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md">
-                  <Icon className="absolute h-6 w-6 -top-3 -left-3 text-white" />
-                  <Icon className="absolute h-6 w-6 -bottom-3 -left-3 text-white" />
-                  <Icon className="absolute h-6 w-6 -top-3 -right-3 text-white" />
-                  <Icon className="absolute h-6 w-6 -bottom-3 -right-3 text-white" />
-
-                  <h2 className="text-white text-xl font-bold mb-6">
-                    How to Send USDC
-                  </h2>
-                  <div className="space-y-4 text-white/80 text-sm">
-                    <p>1. Connect your wallet</p>
-                    <p>2. Select the destination chain</p>
-                    <p>3. Enter amount and recipient</p>
-                    <p>4. Click Send and confirm</p>
+                <ModernCard
+                  title="SEND USDC"
+                  subtitle="Cross-chain Transfer"
+                >
+                  <div className="space-y-4">
+                    <FeatureItem 
+                      title="Connect your wallet" 
+                      description="Link your crypto wallet to get started" 
+                    />
+                    <FeatureItem 
+                      title="Select destination chain" 
+                      description="Choose where to send your USDC" 
+                    />
+                    <FeatureItem 
+                      title="Enter amount & recipient" 
+                      description="Specify how much and where to send" 
+                    />
+                    <FeatureItem 
+                      title="Click Send and confirm" 
+                      description="Complete the transaction securely" 
+                    />
                   </div>
-                </div>
+                </ModernCard>
               </div>
             </div>
           ) : (
             <div className="flex gap-8">
               {/* Instructions Card - How to Bridge & Supply */}
               <div className="w-80">
-                <div className="border border-white/20 dark:border-white/[0.2] flex flex-col items-start p-8 relative h-[30rem] rounded-3xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md">
-                  <Icon className="absolute h-6 w-6 -top-3 -left-3 text-white" />
-                  <Icon className="absolute h-6 w-6 -bottom-3 -left-3 text-white" />
-                  <Icon className="absolute h-6 w-6 -top-3 -right-3 text-white" />
-                  <Icon className="absolute h-6 w-6 -bottom-3 -right-3 text-white" />
-
-                  <h2 className="text-white text-xl font-bold mb-6">
-                    How to Bridge & Supply
-                  </h2>
-                  <div className="space-y-4 text-white/80 text-sm">
-                    <p>1. Connect your wallet</p>
-                    <p>2. Select source and destination chains</p>
-                    <p>3. Enter amount to bridge</p>
-                    <p>4. Execute bridge and supply to Aave</p>
+                <ModernCard
+                  title="BRIDGE & SUPPLY"
+                  subtitle="To Aave Protocol"
+                >
+                  <div className="space-y-4">
+                    <FeatureItem 
+                      title="Connect your wallet" 
+                      description="Link your crypto wallet to get started" 
+                    />
+                    <FeatureItem 
+                      title="Select source & destination" 
+                      description="Choose chains for bridging" 
+                    />
+                    <FeatureItem 
+                      title="Enter bridge amount" 
+                      description="Specify how much to bridge" 
+                    />
+                    <FeatureItem 
+                      title="Execute bridge & supply" 
+                      description="Complete bridge and supply to Aave" 
+                    />
                   </div>
-                </div>
+                </ModernCard>
               </div>
             </div>
           )}
