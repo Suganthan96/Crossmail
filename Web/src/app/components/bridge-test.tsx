@@ -12,7 +12,21 @@ import { CardSpotlight } from '@/components/ui/card-spotlight';
 export function BridgeTest() {
   const { isConnected } = useAccount();
   const { isSdkInitialized, sdk } = useNexus();
+  const [recipientAddress, setRecipientAddress] = React.useState('');
+  const [isValidAddress, setIsValidAddress] = React.useState(false);
 
+  // Validate Ethereum address
+  const validateAddress = (address: string) => {
+    const ethAddressRegex = /^0x[a-fA-F0-9]{40}$/;
+    return ethAddressRegex.test(address);
+  };
+
+  // Handle recipient address change
+  const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const address = e.target.value;
+    setRecipientAddress(address);
+    setIsValidAddress(validateAddress(address));
+  };
 
   React.useEffect(() => {
     if (sdk && isSdkInitialized) {
@@ -52,21 +66,55 @@ export function BridgeTest() {
           <div className="w-full">
             <h3 className="text-2xl font-bold text-white mb-4 text-center">Transfer USDC</h3>
             <p className="text-white/70 text-sm mb-6 text-center">Send USDC tokens across chains instantly</p>
-            <TransferButton
-              prefill={{
-                chainId: 11155420, 
-                token: 'USDC',
-                amount: '1',
-                recipient: '0x0754241982730db1ecf4a2c5e7839c1467f13c5e', 
-              }}
-            >
-              {({ onClick, isLoading }) => (
-                <button onClick={onClick} disabled={isLoading}
-                  className="w-full px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                  {isLoading ? 'Sending…' : 'Send 1 USDC'}
-                </button>
+            
+            {/* Recipient Address Input */}
+            <div className="mb-6">
+              <label className="block text-white text-sm font-medium mb-2">
+                Recipient Address
+              </label>
+              <input
+                type="text"
+                value={recipientAddress}
+                onChange={handleAddressChange}
+                placeholder="0x... (Enter recipient's Ethereum address)"
+                className={`w-full px-4 py-3 rounded-lg bg-white/10 border text-white placeholder-white/50 focus:outline-none focus:ring-2 transition-all duration-300 ${
+                  recipientAddress === '' 
+                    ? 'border-white/20 focus:ring-blue-500' 
+                    : isValidAddress 
+                      ? 'border-green-500 focus:ring-green-500' 
+                      : 'border-red-500 focus:ring-red-500'
+                }`}
+              />
+              {recipientAddress !== '' && (
+                <p className={`text-xs mt-1 ${isValidAddress ? 'text-green-400' : 'text-red-400'}`}>
+                  {isValidAddress ? '✓ Valid Ethereum address' : '✗ Invalid address format'}
+                </p>
               )}
-            </TransferButton>
+            </div>
+
+            {recipientAddress && isValidAddress ? (
+              <TransferButton
+                prefill={{
+                  chainId: 11155420, 
+                  token: 'USDC',
+                  amount: '1',
+                  recipient: recipientAddress as `0x${string}`, 
+                }}
+              >
+                {({ onClick, isLoading }) => (
+                  <button onClick={onClick} disabled={isLoading}
+                    className="w-full px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                    {isLoading ? 'Sending…' : 'Send 1 USDC'}
+                  </button>
+                )}
+              </TransferButton>
+            ) : (
+              <button 
+                disabled 
+                className="w-full px-8 py-4 bg-gray-500 text-white font-semibold rounded-xl opacity-50 cursor-not-allowed transition-all duration-300">
+                {recipientAddress === '' ? 'Enter Recipient Address' : 'Invalid Address Format'}
+              </button>
+            )}
           </div>
         </CardSpotlight>
       </div>

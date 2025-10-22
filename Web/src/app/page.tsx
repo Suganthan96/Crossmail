@@ -15,8 +15,23 @@ import { ConnectKitButton } from 'connectkit';
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'send' | 'bridge'>('send');
   const [animationTrigger, setAnimationTrigger] = useState(0);
+  const [recipientAddress, setRecipientAddress] = useState('');
+  const [isValidAddress, setIsValidAddress] = useState(false);
   const shuffleRef = useRef<any>(null);
   const textTypeRef = useRef<any>(null);
+
+  // Validate Ethereum address
+  const validateAddress = (address: string) => {
+    const ethAddressRegex = /^0x[a-fA-F0-9]{40}$/;
+    return ethAddressRegex.test(address);
+  };
+
+  // Handle recipient address change
+  const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const address = e.target.value;
+    setRecipientAddress(address);
+    setIsValidAddress(validateAddress(address));
+  };
 
   // Synchronized animation controller
   useEffect(() => {
@@ -135,12 +150,12 @@ export default function Home() {
                       description="Link your crypto wallet to get started" 
                     />
                     <FeatureItem 
-                      title="Select destination chain" 
-                      description="Choose where to send your USDC" 
+                      title="Enter recipient address" 
+                      description="Provide the recipient's Ethereum address" 
                     />
                     <FeatureItem 
-                      title="Enter amount & recipient" 
-                      description="Specify how much and where to send" 
+                      title="Select destination chain" 
+                      description="Choose where to send your USDC" 
                     />
                     <FeatureItem 
                       title="Click Send and confirm" 
@@ -187,57 +202,105 @@ export default function Home() {
           {activeTab === 'send' ? (
             <div className="text-center">
               <h2 className="text-white text-6xl font-bold mb-4" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>Transfer USDC</h2>
-              <p className="text-white/80 text-3xl mb-20" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
+              <p className="text-white/80 text-3xl mb-8" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
                 Send USDC tokens across chains instantly
               </p>
-              <TransferButton
-                prefill={{
-                  chainId: 11155420,
-                  token: 'USDC',
-                  amount: '1',
-                  recipient: '0x0754241982730db1ecf4a2c5e7839c1467f13c5e',
-                }}
-              >
-                {({ onClick, isLoading }) => (
-                  <button
-                    onClick={onClick}
-                    disabled={isLoading}
-                    className="relative font-inherit overflow-hidden transition-all duration-300"
-                    style={{ 
-                      fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif',
-                      fontSize: '15px',
-                      padding: '0.7em 2.7em',
-                      letterSpacing: '0.06em',
-                      borderRadius: '0.6em',
-                      lineHeight: '1.4em',
-                      border: '2px solid #06b6d4',
-                      background: 'linear-gradient(to right, rgba(6, 182, 212, 0.1) 1%, transparent 40%, transparent 60%, rgba(6, 182, 212, 0.1) 100%)',
-                      color: '#06b6d4',
-                      boxShadow: 'inset 0 0 10px rgba(6, 182, 212, 0.4), 0 0 9px 3px rgba(6, 182, 212, 0.1)',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.color = '#22d3ee';
-                      e.currentTarget.style.boxShadow = 'inset 0 0 10px rgba(6, 182, 212, 0.6), 0 0 9px 3px rgba(6, 182, 212, 0.2)';
-                      const span = e.currentTarget.querySelector('span');
-                      if (span) span.style.transform = 'translateX(15em)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.color = '#06b6d4';
-                      e.currentTarget.style.boxShadow = 'inset 0 0 10px rgba(6, 182, 212, 0.4), 0 0 9px 3px rgba(6, 182, 212, 0.1)';
-                      const span = e.currentTarget.querySelector('span');
-                      if (span) span.style.transform = 'translateX(0)';
-                    }}
-                  >
-                    <span 
-                      className="absolute left-[-4em] w-16 h-full top-0 transition-transform duration-400 ease-in-out"
-                      style={{
-                        background: 'linear-gradient(to right, transparent 1%, rgba(6, 182, 212, 0.1) 40%, rgba(6, 182, 212, 0.1) 60%, transparent 100%)',
-                      }}
-                    />
-                    {isLoading ? 'Sending…' : 'Send 1 USDC'}
-                  </button>
+              
+              {/* Recipient Address Input */}
+              <div className="mb-12 max-w-md mx-auto">
+                <label className="block text-white text-lg font-medium mb-3" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
+                  Recipient Address
+                </label>
+                <input
+                  type="text"
+                  value={recipientAddress}
+                  onChange={handleAddressChange}
+                  placeholder="0x... (Enter recipient's Ethereum address)"
+                  className={`w-full px-6 py-4 rounded-xl bg-white/10 backdrop-blur-md border text-white placeholder-white/50 focus:outline-none focus:ring-2 transition-all duration-300 text-center ${
+                    recipientAddress === '' 
+                      ? 'border-white/20 focus:ring-cyan-500' 
+                      : isValidAddress 
+                        ? 'border-green-500 focus:ring-green-500' 
+                        : 'border-red-500 focus:ring-red-500'
+                  }`}
+                  style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}
+                />
+                {recipientAddress !== '' && (
+                  <p className={`text-sm mt-2 ${isValidAddress ? 'text-green-400' : 'text-red-400'}`} style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
+                    {isValidAddress ? '✓ Valid Ethereum address' : '✗ Invalid address format'}
+                  </p>
                 )}
-              </TransferButton>
+              </div>
+
+              {recipientAddress && isValidAddress ? (
+                <TransferButton
+                  prefill={{
+                    chainId: 11155420,
+                    token: 'USDC',
+                    amount: '1',
+                    recipient: recipientAddress as `0x${string}`,
+                  }}
+                >
+                  {({ onClick, isLoading }) => (
+                    <button
+                      onClick={onClick}
+                      disabled={isLoading}
+                      className="relative font-inherit overflow-hidden transition-all duration-300"
+                      style={{ 
+                        fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif',
+                        fontSize: '15px',
+                        padding: '0.7em 2.7em',
+                        letterSpacing: '0.06em',
+                        borderRadius: '0.6em',
+                        lineHeight: '1.4em',
+                        border: '2px solid #06b6d4',
+                        background: 'linear-gradient(to right, rgba(6, 182, 212, 0.1) 1%, transparent 40%, transparent 60%, rgba(6, 182, 212, 0.1) 100%)',
+                        color: '#06b6d4',
+                        boxShadow: 'inset 0 0 10px rgba(6, 182, 212, 0.4), 0 0 9px 3px rgba(6, 182, 212, 0.1)',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = '#22d3ee';
+                        e.currentTarget.style.boxShadow = 'inset 0 0 10px rgba(6, 182, 212, 0.6), 0 0 9px 3px rgba(6, 182, 212, 0.2)';
+                        const span = e.currentTarget.querySelector('span');
+                        if (span) span.style.transform = 'translateX(15em)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = '#06b6d4';
+                        e.currentTarget.style.boxShadow = 'inset 0 0 10px rgba(6, 182, 212, 0.4), 0 0 9px 3px rgba(6, 182, 212, 0.1)';
+                        const span = e.currentTarget.querySelector('span');
+                        if (span) span.style.transform = 'translateX(0)';
+                      }}
+                    >
+                      <span 
+                        className="absolute left-[-4em] w-16 h-full top-0 transition-transform duration-400 ease-in-out"
+                        style={{
+                          background: 'linear-gradient(to right, transparent 1%, rgba(6, 182, 212, 0.1) 40%, rgba(6, 182, 212, 0.1) 60%, transparent 100%)',
+                        }}
+                      />
+                      {isLoading ? 'Sending…' : 'Send 1 USDC'}
+                    </button>
+                  )}
+                </TransferButton>
+              ) : (
+                <button 
+                  disabled 
+                  className="relative font-inherit overflow-hidden opacity-50 cursor-not-allowed"
+                  style={{ 
+                    fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif',
+                    fontSize: '15px',
+                    padding: '0.7em 2.7em',
+                    letterSpacing: '0.06em',
+                    borderRadius: '0.6em',
+                    lineHeight: '1.4em',
+                    border: '2px solid #374151',
+                    background: 'linear-gradient(to right, rgba(55, 65, 81, 0.1) 1%, transparent 40%, transparent 60%, rgba(55, 65, 81, 0.1) 100%)',
+                    color: '#9ca3af',
+                    boxShadow: 'inset 0 0 10px rgba(55, 65, 81, 0.4), 0 0 9px 3px rgba(55, 65, 81, 0.1)',
+                  }}
+                >
+                  {recipientAddress === '' ? 'Enter Recipient Address' : 'Invalid Address Format'}
+                </button>
+              )}
             </div>
           ) : (
             <div className="text-center">
