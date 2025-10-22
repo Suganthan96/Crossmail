@@ -66,7 +66,7 @@ export const FeatureItem = ({ title, description }: { title: string; description
       </svg>
     </div>
     <div>
-      <p className="text-sm font-medium text-white">{title}</p>
+  <p className="text-sm font-medium text-black">{title}</p>
       <p className="text-xs text-slate-400">{description}</p>
     </div>
   </div>
