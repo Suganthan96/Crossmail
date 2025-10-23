@@ -10,13 +10,13 @@ import { ConnectKitButton } from 'connectkit';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'send' | 'bridge'>('send');
-  const [animationTrigger, setAnimationTrigger] = useState(0);
-  const [recipientAddress, setRecipientAddress] = useState('');
-  const [transferAmount, setTransferAmount] = useState('');
+  const [animationTrigger, setAnimationTrigger] = useState<number>(0);
+  const [recipientAddress, setRecipientAddress] = useState<string>('');
+  const [transferAmount, setTransferAmount] = useState<string>('');
   const [selectedChain, setSelectedChain] = useState<number>(11155420);
-  const [isValidAddress, setIsValidAddress] = useState(false);
-  const shuffleRef = useRef<any>(null);
-  const textTypeRef = useRef<any>(null);
+  const [isValidAddress, setIsValidAddress] = useState<boolean>(false);
+  const shuffleRef = useRef<HTMLElement>(null);
+  const textTypeRef = useRef<HTMLElement>(null);
 
   // Chain options mapping
   const chainOptions = [
@@ -394,7 +394,7 @@ export default function Home() {
                 {recipientAddress && isValidAddress && transferAmount && parseFloat(transferAmount) > 0 ? (
                   <TransferButton
                     prefill={{
-                      chainId: selectedChain,
+                      chainId: selectedChain as 11155420 | 80002 | 421614 | 84532 | 11155111 | 10143,
                       token: 'ETH',
                       amount: transferAmount,
                       recipient: recipientAddress as `0x${string}`,

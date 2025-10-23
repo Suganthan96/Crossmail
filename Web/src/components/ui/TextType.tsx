@@ -54,7 +54,7 @@ const TextType = forwardRef<HTMLElement, TextTypeProps & React.HTMLAttributes<HT
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(!startOnVisible);
   const cursorRef = useRef<HTMLSpanElement>(null);
-  const containerRef = useRef<HTMLElement>(forwardedRef as any || null);
+  const containerRef = useRef<HTMLElement>((forwardedRef as React.RefObject<HTMLElement>)?.current || null);
 
   const textArray = useMemo(() => (Array.isArray(text) ? text : [text]), [text]);
 
@@ -196,7 +196,8 @@ const TextType = forwardRef<HTMLElement, TextTypeProps & React.HTMLAttributes<HT
     reverseMode,
     variableSpeed,
     onSentenceComplete,
-    externalTrigger
+    externalTrigger,
+    getRandomSpeed
   ]);
 
   const shouldHideCursor =
@@ -205,7 +206,7 @@ const TextType = forwardRef<HTMLElement, TextTypeProps & React.HTMLAttributes<HT
   return createElement(
     Component,
     {
-      ref: containerRef as any,
+      ref: containerRef as React.RefObject<HTMLElement>,
       className: `text-type ${className}`,
       ...props
     },

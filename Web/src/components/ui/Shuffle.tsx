@@ -65,7 +65,7 @@ const Shuffle = forwardRef<HTMLElement, ShuffleProps>(({
   autoTriggerInterval = 7000,
   externalTrigger
 }, forwardedRef) => {
-  const ref = useRef<HTMLElement>(forwardedRef as any || null);
+  const ref = useRef<HTMLElement>((forwardedRef as React.RefObject<HTMLElement>)?.current || null);
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [ready, setReady] = useState(false);
 
@@ -214,7 +214,7 @@ const Shuffle = forwardRef<HTMLElement, ShuffleProps>(({
           }
 
           gsap.set(inner, { x: startX, force3D: true });
-          if (colorFrom) (inner.style as any).color = colorFrom;
+          if (colorFrom) inner.style.color = colorFrom;
 
           inner.setAttribute('data-final-x', String(finalX));
           inner.setAttribute('data-start-x', String(startX));
@@ -435,7 +435,7 @@ const Shuffle = forwardRef<HTMLElement, ShuffleProps>(({
   const commonStyle: React.CSSProperties = { textAlign, ...style };
   const classes = `shuffle-parent ${ready ? 'is-ready' : ''} ${className}`;
   const Tag = (tag || 'p') as keyof JSX.IntrinsicElements;
-  return React.createElement(Tag, { ref: ref as any, className: classes, style: commonStyle }, text);
+  return React.createElement(Tag, { ref: ref as React.RefObject<HTMLElement>, className: classes, style: commonStyle }, text);
 });
 
 Shuffle.displayName = 'Shuffle';

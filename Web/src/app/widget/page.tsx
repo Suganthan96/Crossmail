@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import { TransferButton, BridgeAndExecuteButton, TOKEN_METADATA, TOKEN_CONTRACT_ADDRESSES } from '@avail-project/nexus-widgets';
 import { ConnectKitButton } from 'connectkit';
 import { useAccount } from 'wagmi';
@@ -9,9 +9,9 @@ import { useNexus } from '@avail-project/nexus-widgets';
 import { useSearchParams } from 'next/navigation';
 import { WalletBridge } from '../components/wallet-bridge';
 
-export default function WidgetPage() {
+function WidgetPageContent() {
   const { isConnected } = useAccount();
-  const { isSdkInitialized, sdk } = useNexus();
+  const { isSdkInitialized } = useNexus();
   const searchParams = useSearchParams();
   const [recipientAddress, setRecipientAddress] = React.useState('');
   const [isValidAddress, setIsValidAddress] = React.useState(false);
@@ -47,40 +47,32 @@ export default function WidgetPage() {
 
   if (!isConnected) {
     return (
-      <>
-        <WalletBridge />
-        <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20 text-center">
-            <h1 className="text-2xl font-bold text-white mb-4">Nexus Widget</h1>
-            <p className="text-white/70 mb-6">Connect your wallet to get started</p>
-            <ConnectKitButton />
-          </div>
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+        <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20 text-center">
+          <h1 className="text-2xl font-bold text-white mb-4">Nexus Widget</h1>
+          <p className="text-white/70 mb-6">Connect your wallet to get started</p>
+          <ConnectKitButton />
         </div>
-      </>
+      </div>
     );
   }
 
   if (!isSdkInitialized) {
     return (
-      <>
-        <WalletBridge />
-        <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20 text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400 mx-auto mb-4"></div>
-            <p className="text-white">Initializing Nexus SDK...</p>
-            <p className="text-sm text-white/70 mt-2">Please wait while we set up the cross-chain bridge</p>
-          </div>
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+        <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20 text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400 mx-auto mb-4"></div>
+          <p className="text-white">Initializing Nexus SDK...</p>
+          <p className="text-sm text-white/70 mt-2">Please wait while we set up the cross-chain bridge</p>
         </div>
-      </>
+      </div>
     );
   }
 
   const finalRecipient = recipientAddress || urlRecipient;
 
   return (
-    <>
-      <WalletBridge />
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
         <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20 max-w-md w-full">
           {/* Header */}
           <div className="text-center mb-6">
@@ -143,7 +135,7 @@ export default function WidgetPage() {
           {/* Info Message */}
           <div className="mb-6 p-3 rounded-lg bg-green-500/10 border border-green-500/20">
             <p className="text-green-400 text-sm">
-              💡 <strong>Sign a quick message to turn on cross-chain transfers. Don't worry it's gasless & no funds will move yet.</strong>
+              💡 <strong>Sign a quick message to turn on cross-chain transfers. Don&apos;t worry it&apos;s gasless & no funds will move yet.</strong>
             </p>
           </div>
 
@@ -153,8 +145,8 @@ export default function WidgetPage() {
               {type === 'transfer' ? (
                 <TransferButton
                   prefill={{
-                    chainId: chainId,
-                    token: token as any,
+                    chainId: chainId as 11155420 | 80002 | 421614 | 84532 | 11155111,
+                    token: token as 'USDC' | 'ETH',
                     amount: amount,
                     recipient: finalRecipient as `0x${string}`,
                   }}
@@ -195,7 +187,7 @@ export default function WidgetPage() {
                       functionParams: [tokenAddress, amountWei, userAddress, 0],
                     };
                   }}
-                  prefill={{ toChainId: chainId, token: token as any }}
+                  prefill={{ toChainId: chainId as 11155420 | 80002 | 421614 | 84532 | 11155111, token: token as 'USDC' | 'ETH' }}
                 >
                   {({ onClick, isLoading, disabled }) => (
                     <button
@@ -232,7 +224,24 @@ export default function WidgetPage() {
             </p>
           </div>
         </div>
-      </div>
+    </div>
+  );
+}
+
+export default function WidgetPage() {
+  return (
+    <>
+      <WalletBridge />
+      <Suspense fallback={
+        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
+          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20 text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400 mx-auto mb-4"></div>
+            <p className="text-white">Loading...</p>
+          </div>
+        </div>
+      }>
+        <WidgetPageContent />
+      </Suspense>
     </>
   );
 }
