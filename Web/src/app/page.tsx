@@ -15,9 +15,20 @@ export default function Home() {
   const [animationTrigger, setAnimationTrigger] = useState(0);
   const [recipientAddress, setRecipientAddress] = useState('');
   const [transferAmount, setTransferAmount] = useState('');
+  const [selectedChain, setSelectedChain] = useState<number>(11155420);
   const [isValidAddress, setIsValidAddress] = useState(false);
   const shuffleRef = useRef<any>(null);
   const textTypeRef = useRef<any>(null);
+
+  // Chain options mapping
+  const chainOptions = [
+    { id: 11155420, name: 'Optimism Sepolia' },
+    { id: 80002, name: 'Polygon Amoy' },
+    { id: 421614, name: 'Arbitrum Sepolia' },
+    { id: 84532, name: 'Base Sepolia' },
+    { id: 11155111, name: 'Sepolia' },
+    { id: 10143, name: 'Monad Testnet' },
+  ];
 
   // Validate Ethereum address
   const validateAddress = (address: string) => {
@@ -39,6 +50,11 @@ export default function Home() {
     if (value === '' || /^\d*\.?\d*$/.test(value)) {
       setTransferAmount(value);
     }
+  };
+
+  // Handle chain selection change
+  const handleChainChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedChain(Number(e.target.value));
   };
 
   // Synchronized animation controller
@@ -322,20 +338,39 @@ export default function Home() {
                   <label className="block text-black text-lg font-medium mb-3" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
                     Amount (USDC)
                   </label>
-                  <input
-                    type="text"
-                    value={transferAmount}
-                    onChange={handleAmountChange}
-                    placeholder="Enter amount"
-                    className="w-full px-6 py-4 rounded-xl bg-white/30 backdrop-blur-md border border-white/30 text-black placeholder-black/50 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-300 text-center"
-                    style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}
-                  />
+                  <div className="flex gap-3">
+                    <input
+                      type="text"
+                      value={transferAmount}
+                      onChange={handleAmountChange}
+                      placeholder="Enter amount"
+                      className="flex-1 px-6 py-4 rounded-xl bg-white/30 backdrop-blur-md border border-white/30 text-black placeholder-black/50 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-300 text-center"
+                      style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}
+                    />
+                    
+                    {/* Chain Selector */}
+                    <select
+                      value={selectedChain}
+                      onChange={handleChainChange}
+                      className="px-6 py-4 rounded-xl bg-white/30 backdrop-blur-md border border-white/30 text-black focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-300 cursor-pointer"
+                      style={{ 
+                        fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif',
+                        minWidth: '200px'
+                      }}
+                    >
+                      {chainOptions.map((chain) => (
+                        <option key={chain.id} value={chain.id} className="bg-slate-800 text-white">
+                          {chain.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
 
                 {recipientAddress && isValidAddress && transferAmount && parseFloat(transferAmount) > 0 ? (
                   <TransferButton
                     prefill={{
-                      chainId: 11155420,
+                      chainId: selectedChain,
                       token: 'USDC',
                       amount: transferAmount,
                       recipient: recipientAddress as `0x${string}`,
