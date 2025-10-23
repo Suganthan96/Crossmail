@@ -15,13 +15,13 @@ export function BridgeTest() {
   const [recipientAddress, setRecipientAddress] = React.useState('');
   const [isValidAddress, setIsValidAddress] = React.useState(false);
 
-  // Validate Ethereum address
+
   const validateAddress = (address: string) => {
     const ethAddressRegex = /^0x[a-fA-F0-9]{40}$/;
     return ethAddressRegex.test(address);
   };
 
-  // Handle recipient address change
+ 
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const address = e.target.value;
     setRecipientAddress(address);

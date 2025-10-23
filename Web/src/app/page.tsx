@@ -86,7 +86,7 @@ export default function Home() {
           {/* Navigation Toggle Switch - Top Left */}
           <div className="absolute top-6 left-6 flex items-center gap-4">
             <span className={`text-sm font-medium transition-colors ${activeTab === 'send' ? 'text-black' : 'text-black/60'}`}>
-              Send
+              Rebalance
             </span>
             <div className="relative">
               <button
@@ -103,13 +103,24 @@ export default function Home() {
               </button>
             </div>
             <span className={`text-sm font-medium transition-colors ${activeTab === 'bridge' ? 'text-black' : 'text-black/60'}`}>
-              Bridge
+              Supply & Earn
             </span>
           </div>
 
-          {/* Wallet Connect Button - Top Right */}
-          <div className="absolute top-6 right-6 backdrop-blur-md bg-white/10 border border-black/20 rounded-xl overflow-hidden">
-            <ConnectKitButton />
+          {/* Wallet Connect Button & Docs - Top Right */}
+          <div className="absolute top-6 right-6 flex flex-col gap-3">
+            <div className="backdrop-blur-md bg-white/10 border border-black/20 rounded-xl overflow-hidden">
+              <ConnectKitButton />
+            </div>
+            <a 
+              href="https://github.com/Suganthan96/Crossmail/blob/main/Readme.md"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="backdrop-blur-md bg-white/10 border border-black/20 rounded-xl px-6 py-2.5 text-black font-medium text-sm hover:bg-white/20 transition-all duration-300 text-center"
+              style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}
+            >
+              Docs
+            </a>
           </div>
 
           {/* Centered Logo */}
@@ -240,57 +251,72 @@ export default function Home() {
                   </div>
                 </div>
               ) : (
-                <div>
-                  <h3 className="text-2xl font-bold text-black mb-2" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
-                    BRIDGE & SUPPLY
-                  </h3>
-                  <p className="text-black/70 mb-6" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
-                    To Aave Protocol
-                  </p>
-                  <div className="space-y-6">
-                    <div className="flex items-start gap-4">
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cyan-500/20">
-                        <svg stroke="currentColor" viewBox="0 0 24 24" fill="none" className="h-5 w-5 text-cyan-600">
-                          <path d="M5 13l4 4L19 7" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
-                        </svg>
+                <div className="space-y-2">
+                  <div className="text-center mb-3">
+                    <h3 className="text-2xl font-bold text-black mb-1" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
+                      BRIDGE & SUPPLY
+                    </h3>
+                    <p className="text-black/70 text-sm" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
+                      To Aave Protocol
+                    </p>
+                    <div className="border-t-2 border-black my-2"></div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div>
+                      <h4 className="text-lg font-bold text-black mb-1" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
+                        STEP 1: Connect Wallet
+                      </h4>
+                      <div className="border-t border-black mb-1"></div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-green-600 font-bold">✓</span>
+                        <span className="text-sm font-semibold text-black">Link your crypto wallet</span>
                       </div>
-                      <div>
-                        <p className="text-lg font-semibold text-black" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>Connect your wallet</p>
-                        <p className="text-black/70" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>Link your crypto wallet to get started</p>
-                      </div>
+                      <p className="text-sm text-black/80" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
+                        Connect your wallet to access bridging and DeFi protocols. Required for all transactions.
+                      </p>
                     </div>
-                    <div className="flex items-start gap-4">
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cyan-500/20">
-                        <svg stroke="currentColor" viewBox="0 0 24 24" fill="none" className="h-5 w-5 text-cyan-600">
-                          <path d="M5 13l4 4L19 7" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
-                        </svg>
+
+                    <div>
+                      <h4 className="text-lg font-bold text-black mb-1" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
+                        STEP 2: Select Source & Destination
+                      </h4>
+                      <div className="border-t border-black mb-1"></div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-blue-600 font-bold">→</span>
+                        <span className="text-sm font-semibold text-black">Choose chains for bridging</span>
                       </div>
-                      <div>
-                        <p className="text-lg font-semibold text-black" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>Select source & destination</p>
-                        <p className="text-black/70" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>Choose chains for bridging</p>
-                      </div>
+                      <p className="text-sm text-black/80" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
+                        Pick source chain where your USDC is currently located and destination chain (Arbitrum Sepolia) where Aave protocol is deployed.
+                      </p>
                     </div>
-                    <div className="flex items-start gap-4">
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cyan-500/20">
-                        <svg stroke="currentColor" viewBox="0 0 24 24" fill="none" className="h-5 w-5 text-cyan-600">
-                          <path d="M5 13l4 4L19 7" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
-                        </svg>
+
+                    <div>
+                      <h4 className="text-lg font-bold text-black mb-1" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
+                        STEP 3: Enter Bridge Amount
+                      </h4>
+                      <div className="border-t border-black mb-1"></div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-blue-600 font-bold">→</span>
+                        <span className="text-sm font-semibold text-black">Specify how much to bridge</span>
                       </div>
-                      <div>
-                        <p className="text-lg font-semibold text-black" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>Enter bridge amount</p>
-                        <p className="text-black/70" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>Specify how much to bridge</p>
-                      </div>
+                      <p className="text-sm text-black/80" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
+                        Enter USDC amount to bridge and supply to Aave. Check your balance and bridge fees before confirming.
+                      </p>
                     </div>
-                    <div className="flex items-start gap-4">
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cyan-500/20">
-                        <svg stroke="currentColor" viewBox="0 0 24 24" fill="none" className="h-5 w-5 text-cyan-600">
-                          <path d="M5 13l4 4L19 7" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
-                        </svg>
+
+                    <div>
+                      <h4 className="text-lg font-bold text-black mb-1" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
+                        STEP 4: Execute Bridge & Supply
+                      </h4>
+                      <div className="border-t border-black mb-1"></div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-blue-600 font-bold">→</span>
+                        <span className="text-sm font-semibold text-black">Complete bridge and supply to Aave</span>
                       </div>
-                      <div>
-                        <p className="text-lg font-semibold text-black" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>Execute bridge & supply</p>
-                        <p className="text-black/70" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>Complete bridge and supply to Aave</p>
-                      </div>
+                      <p className="text-sm text-black/80" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
+                        Nexus bridges your USDC to destination chain and automatically supplies it to Aave Protocol. Earn interest on your deposited USDC instantly.
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -310,7 +336,7 @@ export default function Home() {
                 {/* Recipient Address Input */}
                 <div className="mb-6">
                   <label className="block text-black text-lg font-medium mb-3" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
-                    Recipient Address
+                    Hot wallet Address
                   </label>
                   <input
                     type="text"
@@ -328,7 +354,7 @@ export default function Home() {
                   />
                   {recipientAddress !== '' && (
                     <p className={`text-sm mt-2 ${isValidAddress ? 'text-green-600' : 'text-red-600'}`} style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
-                      {isValidAddress ? '✓ Valid Ethereum address' : '✗ Invalid address format'}
+                      {isValidAddress ? '✓ Valid wallet address' : '✗ Invalid address format'}
                     </p>
                   )}
                 </div>
@@ -446,9 +472,9 @@ export default function Home() {
               </div>
             ) : (
               <div className="text-center max-w-lg">
-                <h2 className="text-black text-5xl font-bold mb-4" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>Supply to Aave</h2>
+                <h2 className="text-black text-5xl font-bold mb-4" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>Bridge and Supply to Aave</h2>
                 <p className="text-black/80 text-2xl mb-12" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
-                  Bridge and supply tokens to Aave protocol
+                  Supply tokens to earn interest seamlessly
                 </p>
                 <BridgeAndExecuteButton
                   contractAddress="0xBfC91D59fdAA134A4ED45f7B584cAf96D7792Eff"
