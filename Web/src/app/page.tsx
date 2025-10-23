@@ -4,8 +4,6 @@ import { useState, useEffect, useRef } from 'react';
 import { WalletBridge } from './components/wallet-bridge';
 import Shuffle from '@/components/ui/Shuffle';
 import TextType from '@/components/ui/TextType';
-import ModernCard, { FeatureItem } from '@/components/ui/futuristic-card';
-import DottedGlowBackground from '@/components/ui/dotted-glow-background';
 import { TransferButton, BridgeAndExecuteButton, TOKEN_METADATA, TOKEN_CONTRACT_ADDRESSES } from '@avail-project/nexus-widgets';
 import { parseUnits } from 'viem';
 import { ConnectKitButton } from 'connectkit';
@@ -342,7 +340,7 @@ export default function Home() {
                     type="text"
                     value={recipientAddress}
                     onChange={handleAddressChange}
-                    placeholder="0x... (Enter recipient's Ethereum address)"
+                    placeholder="0x... (Enter hot wallet address)"
                     className={`w-full px-6 py-4 rounded-xl bg-white/30 backdrop-blur-md border text-black placeholder-black/50 focus:outline-none focus:ring-2 transition-all duration-300 text-center ${
                       recipientAddress === '' 
                         ? 'border-white/30 focus:ring-cyan-500' 
@@ -397,7 +395,7 @@ export default function Home() {
                   <TransferButton
                     prefill={{
                       chainId: selectedChain,
-                      token: 'USDC',
+                      token: 'ETH',
                       amount: transferAmount,
                       recipient: recipientAddress as `0x${string}`,
                     }}
@@ -460,7 +458,7 @@ export default function Home() {
                     }}
                   >
                     {recipientAddress === '' 
-                      ? 'Enter Recipient Address' 
+                      ? 'Enter Address to continue' 
                       : !isValidAddress 
                         ? 'Invalid Address Format'
                         : transferAmount === '' || parseFloat(transferAmount) <= 0
