@@ -95,9 +95,9 @@ export function BridgeTest() {
             {recipientAddress && isValidAddress ? (
               <TransferButton
                 prefill={{
-                  chainId: 11155420, 
+                  chainId: 421614, 
                   token: 'USDC',
-                  amount: '1',
+                  amount: '5',
                   recipient: recipientAddress as `0x${string}`, 
                 }}
               >

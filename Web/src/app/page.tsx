@@ -14,6 +14,7 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<'send' | 'bridge'>('send');
   const [animationTrigger, setAnimationTrigger] = useState(0);
   const [recipientAddress, setRecipientAddress] = useState('');
+  const [transferAmount, setTransferAmount] = useState('');
   const [isValidAddress, setIsValidAddress] = useState(false);
   const shuffleRef = useRef<any>(null);
   const textTypeRef = useRef<any>(null);
@@ -29,6 +30,15 @@ export default function Home() {
     const address = e.target.value;
     setRecipientAddress(address);
     setIsValidAddress(validateAddress(address));
+  };
+
+  // Handle amount change
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // Only allow numbers and decimal point
+    if (value === '' || /^\d*\.?\d*$/.test(value)) {
+      setTransferAmount(value);
+    }
   };
 
   // Synchronized animation controller
@@ -165,7 +175,7 @@ export default function Home() {
                         <span className="text-sm font-semibold text-black">Upload payroll preferences</span>
                       </div>
                       <p className="text-sm text-black/80" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
-                        Import CSV: email, address, amount, chain. System calculates required token per chain.
+                        Import CSV: email, address, amount, chain. Csv has the total per chain.
                       </p>
                     </div>
 
@@ -276,13 +286,13 @@ export default function Home() {
           <div className="w-1/2 bg-gray-200/60 backdrop-blur-sm border-4 border-black rounded-3xl p-8 flex flex-col items-center justify-center">
             {activeTab === 'send' ? (
               <div className="text-center max-w-lg">
-                <h2 className="text-black text-5xl font-bold mb-4" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>Transfer USDC</h2>
+                <h2 className="text-black text-5xl font-bold mb-4" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>Rebalance Interface</h2>
                 <p className="text-black/80 text-2xl mb-8" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
-                  Send USDC tokens across chains instantly
+                  Rebalance any tokens across any chains instantly
                 </p>
                 
                 {/* Recipient Address Input */}
-                <div className="mb-12">
+                <div className="mb-6">
                   <label className="block text-black text-lg font-medium mb-3" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
                     Recipient Address
                   </label>
@@ -307,12 +317,27 @@ export default function Home() {
                   )}
                 </div>
 
-                {recipientAddress && isValidAddress ? (
+                {/* Amount Input */}
+                <div className="mb-12">
+                  <label className="block text-black text-lg font-medium mb-3" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
+                    Amount (USDC)
+                  </label>
+                  <input
+                    type="text"
+                    value={transferAmount}
+                    onChange={handleAmountChange}
+                    placeholder="Enter amount"
+                    className="w-full px-6 py-4 rounded-xl bg-white/30 backdrop-blur-md border border-white/30 text-black placeholder-black/50 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-300 text-center"
+                    style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}
+                  />
+                </div>
+
+                {recipientAddress && isValidAddress && transferAmount && parseFloat(transferAmount) > 0 ? (
                   <TransferButton
                     prefill={{
                       chainId: 11155420,
                       token: 'USDC',
-                      amount: '1',
+                      amount: transferAmount,
                       recipient: recipientAddress as `0x${string}`,
                     }}
                   >
@@ -352,7 +377,7 @@ export default function Home() {
                             background: 'linear-gradient(to right, transparent 1%, rgba(6, 182, 212, 0.1) 40%, rgba(6, 182, 212, 0.1) 60%, transparent 100%)',
                           }}
                         />
-                        {isLoading ? 'Sending…' : 'Send 1 USDC'}
+                        {isLoading ? 'Sending…' : `Send ${transferAmount} USDC`}
                       </button>
                     )}
                   </TransferButton>
@@ -373,7 +398,14 @@ export default function Home() {
                       boxShadow: 'inset 0 0 10px rgba(55, 65, 81, 0.4), 0 0 9px 3px rgba(55, 65, 81, 0.1)',
                     }}
                   >
-                    {recipientAddress === '' ? 'Enter Recipient Address' : 'Invalid Address Format'}
+                    {recipientAddress === '' 
+                      ? 'Enter Recipient Address' 
+                      : !isValidAddress 
+                        ? 'Invalid Address Format'
+                        : transferAmount === '' || parseFloat(transferAmount) <= 0
+                          ? 'Enter Amount'
+                          : 'Ready to Send'
+                    }
                   </button>
                 )}
               </div>
