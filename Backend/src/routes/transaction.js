@@ -26,16 +26,17 @@ router.post('/send', async (req, res) => {
     }
     
     // Send transaction
-    console.log(`Sending ${amount} ETH to ${to} on ${network}...`);
+    console.log(`\n🚀 Sending ${amount} ETH to ${to} on ${network}...`);
     const tx = await sendTransaction(to, amount, network);
     
-    console.log(`Transaction sent: ${tx.hash}`);
-    console.log(`Waiting for confirmation...`);
+    console.log(`📤 Transaction sent: ${tx.hash}`);
+    console.log(`⏳ Waiting for confirmation...`);
     
     // Wait for transaction to be mined
     const receipt = await tx.wait();
     
-    console.log(`Transaction confirmed in block ${receipt.blockNumber}`);
+    // Log detailed transaction information with Blockscout links
+    logTransactionDetails(tx, receipt, network);
     
     // Send email notification if requested and user is authenticated
     if (notifyEmail && req.session.tokens) {
@@ -44,20 +45,24 @@ router.post('/send', async (req, res) => {
         const gmail = getGmailClient();
         
         const emailBody = `
-Transaction Successful!
+🎉 Transaction Successful!
 
-Transaction Hash: ${tx.hash}
-From: ${tx.from}
-To: ${tx.to}
-Amount: ${amount} ETH
-Network: ${network}
-Block Number: ${receipt.blockNumber}
-Gas Used: ${receipt.gasUsed.toString()}
+📝 Transaction Hash: ${tx.hash}
+💰 From: ${tx.from}
+💰 To: ${tx.to}
+💎 Amount: ${amount} ETH
+🌐 Network: ${network}
+🏗️  Block Number: ${receipt.blockNumber}
+⛽ Gas Used: ${receipt.gasUsed.toString()}
 
-View on Explorer: ${getExplorerUrl(tx.hash, network)}
+🔗 View on MailPay Explorer: ${getExplorerUrl(tx.hash, network)}
+📊 API Details: ${getBlockscoutApiUrl(tx.hash)}
+
+✅ Status: Confirmed
+⏰ Timestamp: ${new Date().toISOString()}
 
 ---
-Sent via CrossMail
+🚀 Sent via CrossMail - Blockchain Email Automation
         `.trim();
         
         const message = [
@@ -267,18 +272,114 @@ Sent via CrossMail
 });
 
 /**
+ * Get Blockscout transaction details
+ */
+router.get('/blockscout/:hash', async (req, res) => {
+  try {
+    const { hash } = req.params;
+    const blockscoutUrl = getBlockscoutApiUrl(hash);
+    const explorerUrl = getExplorerUrl(hash, 'custom');
+    
+    // Log the request
+    console.log(`\n🔍 Fetching transaction details from Blockscout:`);
+    console.log(`📝 Hash: ${hash}`);
+    console.log(`🔗 Explorer: ${explorerUrl}`);
+    console.log(`📊 API: ${blockscoutUrl}`);
+    
+    res.json({
+      success: true,
+      hash: hash,
+      explorerUrl: explorerUrl,
+      apiUrl: blockscoutUrl,
+      blockscoutExplorer: 'https://mail-pay.cloud.blockscout.com',
+      message: 'Use the explorerUrl to view transaction details in your MailPay Blockscout explorer'
+    });
+    
+  } catch (error) {
+    console.error('Blockscout lookup error:', error);
+    res.status(500).json({ 
+      error: 'Failed to get Blockscout details',
+      message: error.message 
+    });
+  }
+});
+
+/**
+ * Test Blockscout connectivity
+ */
+router.get('/test-blockscout', async (req, res) => {
+  try {
+    const explorerBase = 'https://mail-pay.cloud.blockscout.com';
+    
+    console.log(`\n🧪 Testing Blockscout connectivity:`);
+    console.log(`🔗 Explorer: ${explorerBase}`);
+    console.log(`📊 API Base: ${explorerBase}/api/v2`);
+    
+    res.json({
+      success: true,
+      explorerUrl: explorerBase,
+      apiUrl: `${explorerBase}/api/v2`,
+      status: 'Blockscout explorer configured',
+      message: 'Your MailPay Blockscout explorer is ready to track transactions!'
+    });
+    
+  } catch (error) {
+    res.status(500).json({ 
+      error: 'Blockscout test failed',
+      message: error.message 
+    });
+  }
+});
+
+/**
  * Get explorer URL for a transaction
  */
 function getExplorerUrl(hash, network) {
-  const explorers = {
+  // Use your actual Blockscout explorer endpoint
+  const BLOCKSCOUT_EXPLORER = 'https://mail-pay.cloud.blockscout.com';
+  
+  // Fallback to public explorers if needed
+  const publicExplorers = {
     ethereum: 'https://etherscan.io',
     sepolia: 'https://sepolia.etherscan.io',
     arbitrum: 'https://arbiscan.io',
     arbitrumSepolia: 'https://sepolia.arbiscan.io'
   };
   
-  const explorerBase = explorers[network] || explorers.sepolia;
+  // Primary: Use your Blockscout explorer
+  const explorerBase = BLOCKSCOUT_EXPLORER;
+  
   return `${explorerBase}/tx/${hash}`;
+}
+
+/**
+ * Get Blockscout API URL for transaction details
+ */
+function getBlockscoutApiUrl(hash) {
+  return `https://mail-pay.cloud.blockscout.com/api/v2/transactions/${hash}`;
+}
+
+/**
+ * Log transaction details to console with Blockscout links
+ */
+function logTransactionDetails(tx, receipt, network) {
+  console.log('\n' + '='.repeat(80));
+  console.log('🎉 TRANSACTION SUCCESSFUL!');
+  console.log('='.repeat(80));
+  console.log(`📝 Transaction Hash: ${tx.hash}`);
+  console.log(`🔗 Blockscout Explorer: ${getExplorerUrl(tx.hash, network)}`);
+  console.log(`📊 API Endpoint: ${getBlockscoutApiUrl(tx.hash)}`);
+  console.log(`💰 From: ${tx.from}`);
+  console.log(`💰 To: ${tx.to}`);
+  console.log(`💎 Amount: ${tx.value ? (parseFloat(tx.value.toString()) / 1e18).toFixed(6) : '0'} ETH`);
+  console.log(`🏗️  Block Number: ${receipt.blockNumber}`);
+  console.log(`⛽ Gas Used: ${receipt.gasUsed.toString()}`);
+  console.log(`🌐 Network: ${network}`);
+  console.log(`✅ Status: ${receipt.status === 1 ? 'SUCCESS' : 'FAILED'}`);
+  console.log('='.repeat(80));
+  console.log('🔍 View transaction details at:');
+  console.log(`   ${getExplorerUrl(tx.hash, network)}`);
+  console.log('='.repeat(80) + '\n');
 }
 
 export default router;

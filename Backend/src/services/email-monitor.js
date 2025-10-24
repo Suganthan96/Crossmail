@@ -167,7 +167,7 @@ class EmailMonitorService {
       console.log('✅ Transaction successful!');
       console.log(`   Transaction Hash: ${result.tx.hash}`);
       console.log(`   Gas Used: ${result.receipt.gasUsed}`);
-      console.log(`   View on Sepolia: https://sepolia.etherscan.io/tx/${result.tx.hash}`);
+      console.log(`   View on MailPay Explorer: https://mail-pay.cloud.blockscout.com/tx/${result.tx.hash}`);
 
       // Mark as successfully processed with transaction hash
       processedEmailsStore.markAsProcessed(messageId, result.tx.hash, 'completed');
@@ -302,8 +302,8 @@ class EmailMonitorService {
         `⛽ Gas Used: ${txResult.receipt.gasUsed}`,
         `📅 Block: ${txResult.receipt.blockNumber}`,
         ``,
-        `🔍 View on Sepolia Etherscan:`,
-        `https://sepolia.etherscan.io/tx/${txResult.tx.hash}`,
+        `🔍 View on MailPay Explorer:`,
+        `https://mail-pay.cloud.blockscout.com/tx/${txResult.tx.hash}`,
         ``,
         `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
         `⚡ Powered by CrossMail`,

@@ -70,15 +70,32 @@ app.listen(PORT, () => {
   console.log(`📧 Gmail OAuth: ${process.env.GOOGLE_CLIENT_ID ? '✓ Configured' : '✗ Not configured'}`);
   console.log(`💰 Wallet: ${process.env.DEFAULT_WALLET ? '✓ Configured' : '✗ Not configured'}`);
   console.log(`📝 Smart Contract: ${process.env.SEND_ETH_CONTRACT_ADDRESS || '✗ Not configured'}`);
+  
+  // Blockscout Explorer Information
+  console.log(`\n🔍 BLOCKSCOUT EXPLORER INTEGRATION:`);
+  console.log(`   🌐 MailPay Explorer: https://mail-pay.cloud.blockscout.com/`);
+  console.log(`   📊 API Endpoint: https://mail-pay.cloud.blockscout.com/api/v2`);
+  console.log(`   🧪 Test Connection: http://localhost:${PORT}/api/transaction/test-blockscout`);
+  
   console.log(`\n🎯 AUTOMATIC EMAIL MONITORING ENABLED!`);
   console.log(`   ⚡ When you authenticate, the system will automatically:`);
   console.log(`      1. Monitor your Gmail every 10 seconds`);
   console.log(`      2. Detect emails with wallet addresses`);
   console.log(`      3. Execute smart contract transactions`);
-  console.log(`      4. Send confirmation emails`);
+  console.log(`      4. Track transactions on Blockscout explorer`);
+  console.log(`      5. Send confirmation emails with explorer links`);
+  
   console.log(`\n📖 Quick Start:`);
   console.log(`   1. Authenticate: http://localhost:${PORT}/api/auth/google`);
-  console.log(`   2. Compose Gmail with wallet address (0x...)`);
-  console.log(`   3. Hit SEND - Transaction triggers automatically! 🚀`);
+  console.log(`   2. Test Blockscout: http://localhost:${PORT}/api/transaction/test-blockscout`);
+  console.log(`   3. Compose Gmail with wallet address (0x...)`);
+  console.log(`   4. Hit SEND - Transaction triggers automatically! 🚀`);
+  console.log(`   5. View transaction on: https://mail-pay.cloud.blockscout.com/`);
+  
+  console.log(`\n🔗 Transaction Endpoints:`);
+  console.log(`   📤 Send Transaction: POST /api/transaction/send`);
+  console.log(`   📊 Get Status: GET /api/transaction/status/:hash`);
+  console.log(`   🔍 Blockscout Lookup: GET /api/transaction/blockscout/:hash`);
+  
   console.log(`\n📚 Full Guide: Backend/AUTOMATIC_MONITORING_GUIDE.md\n`);
 });
