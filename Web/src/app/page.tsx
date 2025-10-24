@@ -14,6 +14,7 @@ export default function Home() {
   const [recipientAddress, setRecipientAddress] = useState<string>('');
   const [transferAmount, setTransferAmount] = useState<string>('');
   const [selectedChain, setSelectedChain] = useState<number>(11155420);
+  const [selectedToken, setSelectedToken] = useState<'USDC' | 'ETH'>('USDC');
   const [isValidAddress, setIsValidAddress] = useState<boolean>(false);
   const shuffleRef = useRef<HTMLElement>(null);
   const textTypeRef = useRef<HTMLElement>(null);
@@ -26,6 +27,12 @@ export default function Home() {
     { id: 84532, name: 'Base Sepolia' },
     { id: 11155111, name: 'Sepolia' },
     { id: 10143, name: 'Monad Testnet' },
+  ];
+
+  // Token options
+  const tokenOptions = [
+    { symbol: 'USDC' as const, icon: '' },
+    { symbol: 'ETH' as const, icon: '' },
   ];
 
   // Validate Ethereum address
@@ -53,6 +60,11 @@ export default function Home() {
   // Handle chain selection change
   const handleChainChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedChain(Number(e.target.value));
+  };
+
+  // Handle token selection change
+  const handleTokenChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedToken(e.target.value as 'USDC' | 'ETH');
   };
 
   // Synchronized animation controller
@@ -325,15 +337,15 @@ export default function Home() {
           {/* Right Partition - Transfer Form */}
           <div className="w-1/2 bg-gray-200/60 backdrop-blur-sm border-4 border-black rounded-3xl p-8 flex flex-col items-center justify-center">
             {activeTab === 'send' ? (
-              <div className="text-center max-w-lg">
-                <h2 className="text-black text-5xl font-bold mb-4" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>Rebalance Interface</h2>
-                <p className="text-black/80 text-2xl mb-8" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
+              <div className="max-w-lg w-full">
+                <h2 className="text-black text-5xl font-bold mb-4 text-center" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>Rebalance Interface</h2>
+                <p className="text-black/80 text-2xl mb-8 text-center" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
                   Rebalance any tokens across any chains instantly
                 </p>
                 
                 {/* Recipient Address Input */}
                 <div className="mb-6">
-                  <label className="block text-black text-lg font-medium mb-3" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
+                  <label className="block text-black text-lg font-medium mb-3 text-center" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
                     Hot wallet Address
                   </label>
                   <input
@@ -359,27 +371,47 @@ export default function Home() {
 
                 {/* Amount Input */}
                 <div className="mb-12">
-                  <label className="block text-black text-lg font-medium mb-3" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
-                    Amount (USDC)
+                  <label className="block text-black text-lg font-medium mb-3 text-center" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
+                    Amount ({selectedToken})
                   </label>
-                  <div className="flex gap-3">
+                  <div className="flex gap-3 justify-start">
+                    {/* Token Selector */}
+                    <select
+                      value={selectedToken}
+                      onChange={handleTokenChange}
+                      className="px-4 py-4 rounded-xl bg-white/30 backdrop-blur-md border border-white/30 text-black focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-300 cursor-pointer"
+                      style={{ 
+                        fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif',
+                        width: '110px'
+                      }}
+                    >
+                      {tokenOptions.map((token) => (
+                        <option key={token.symbol} value={token.symbol} className="bg-slate-800 text-white">
+                          {token.icon} {token.symbol}
+                        </option>
+                      ))}
+                    </select>
+
                     <input
                       type="text"
                       value={transferAmount}
                       onChange={handleAmountChange}
                       placeholder="Enter amount"
-                      className="flex-1 px-6 py-4 rounded-xl bg-white/30 backdrop-blur-md border border-white/30 text-black placeholder-black/50 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-300 text-center"
-                      style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}
+                      className="px-6 py-4 rounded-xl bg-white/30 backdrop-blur-md border border-white/30 text-black placeholder-black/50 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-300"
+                      style={{ 
+                        fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif',
+                        width: '200px'
+                      }}
                     />
                     
                     {/* Chain Selector */}
                     <select
                       value={selectedChain}
                       onChange={handleChainChange}
-                      className="px-6 py-4 rounded-xl bg-white/30 backdrop-blur-md border border-white/30 text-black focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-300 cursor-pointer"
+                      className="px-4 py-4 rounded-xl bg-white/30 backdrop-blur-md border border-white/30 text-black focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-300 cursor-pointer"
                       style={{ 
                         fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif',
-                        minWidth: '200px'
+                        width: '180px'
                       }}
                     >
                       {chainOptions.map((chain) => (
@@ -391,11 +423,12 @@ export default function Home() {
                   </div>
                 </div>
 
-                {recipientAddress && isValidAddress && transferAmount && parseFloat(transferAmount) > 0 ? (
-                  <TransferButton
-                    prefill={{
-                      chainId: selectedChain as 11155420 | 80002 | 421614 | 84532 | 11155111 | 10143,
-                      token: 'ETH',
+                <div className="flex justify-center">
+                  {recipientAddress && isValidAddress && transferAmount && parseFloat(transferAmount) > 0 ? (
+                    <TransferButton
+                      prefill={{
+                        chainId: selectedChain as 11155420 | 80002 | 421614 | 84532 | 11155111 | 10143,
+                        token: selectedToken as 'USDC' | 'ETH',
                       amount: transferAmount,
                       recipient: recipientAddress as `0x${string}`,
                     }}
@@ -436,7 +469,7 @@ export default function Home() {
                             background: 'linear-gradient(to right, transparent 1%, rgba(6, 182, 212, 0.1) 40%, rgba(6, 182, 212, 0.1) 60%, transparent 100%)',
                           }}
                         />
-                        {isLoading ? 'Sending…' : `Send ${transferAmount} USDC`}
+                        {isLoading ? 'Sending…' : `Send ${transferAmount} ${selectedToken}`}
                       </button>
                     )}
                   </TransferButton>
@@ -466,7 +499,8 @@ export default function Home() {
                           : 'Ready to Send'
                     }
                   </button>
-                )}
+                  )}
+                </div>
               </div>
             ) : (
               <div className="text-center max-w-lg">
