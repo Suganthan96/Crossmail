@@ -12,9 +12,12 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<'send' | 'bridge'>('send');
   const [animationTrigger, setAnimationTrigger] = useState<number>(0);
   const [recipientAddress, setRecipientAddress] = useState<string>('');
-  const [transferAmount, setTransferAmount] = useState<string>('');
-  const [selectedChain, setSelectedChain] = useState<number>(11155420);
-  const [selectedToken, setSelectedToken] = useState<'USDC' | 'ETH'>('USDC');
+  // Multiple transfer entries: each entry is { id, token, amount, chain }
+  const [transferEntries, setTransferEntries] = useState<Array<{ id: string; token: 'USDC' | 'ETH'; amount: string; chain: number }>>([
+    { id: String(Date.now()), token: 'USDC', amount: '', chain: 11155420 },
+  ]);
+  // Refs to store TransferButton onClick handlers for each entry
+  const transferHandlers = useRef<Record<string, (() => any) | undefined>>({});
   const [isValidAddress, setIsValidAddress] = useState<boolean>(false);
   const shuffleRef = useRef<HTMLElement>(null);
   const textTypeRef = useRef<HTMLElement>(null);
@@ -48,23 +51,17 @@ export default function Home() {
     setIsValidAddress(validateAddress(address));
   };
 
-  // Handle amount change
-  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    // Only allow numbers and decimal point
-    if (value === '' || /^\d*\.?\d*$/.test(value)) {
-      setTransferAmount(value);
-    }
+  // Entry field handlers
+  const updateEntry = (id: string, patch: Partial<{ token: 'USDC' | 'ETH'; amount: string; chain: number }>) => {
+    setTransferEntries(prev => prev.map(e => (e.id === id ? { ...e, ...patch } : e)));
   };
 
-  // Handle chain selection change
-  const handleChainChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedChain(Number(e.target.value));
+  const addEntry = () => {
+    setTransferEntries(prev => [...prev, { id: String(Date.now()) + Math.random().toString(36).slice(2, 8), token: 'USDC', amount: '', chain: 11155420 }]);
   };
 
-  // Handle token selection change
-  const handleTokenChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedToken(e.target.value as 'USDC' | 'ETH');
+  const removeEntry = (id: string) => {
+    setTransferEntries(prev => prev.filter(e => e.id !== id));
   };
 
   // Synchronized animation controller
@@ -369,137 +366,120 @@ export default function Home() {
                   )}
                 </div>
 
-                {/* Amount Input */}
-                <div className="mb-12">
+                {/* Dynamic Entries Input (token / amount / chain) */}
+                <div className="mb-6 space-y-3">
                   <label className="block text-black text-lg font-medium mb-3 text-center" style={{ fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif' }}>
-                    Amount ({selectedToken})
+                    Amounts & Destination Chains
                   </label>
-                  <div className="flex gap-3 justify-start">
-                    {/* Token Selector */}
-                    <select
-                      value={selectedToken}
-                      onChange={handleTokenChange}
-                      className="px-4 py-4 rounded-xl bg-white/30 backdrop-blur-md border border-white/30 text-black focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-300 cursor-pointer"
-                      style={{ 
-                        fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif',
-                        width: '110px'
-                      }}
-                    >
-                      {tokenOptions.map((token) => (
-                        <option key={token.symbol} value={token.symbol} className="bg-slate-800 text-white">
-                          {token.icon} {token.symbol}
-                        </option>
-                      ))}
-                    </select>
 
-                    <input
-                      type="text"
-                      value={transferAmount}
-                      onChange={handleAmountChange}
-                      placeholder="Enter amount"
-                      className="px-6 py-4 rounded-xl bg-white/30 backdrop-blur-md border border-white/30 text-black placeholder-black/50 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-300"
-                      style={{ 
-                        fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif',
-                        width: '200px'
-                      }}
-                    />
-                    
-                    {/* Chain Selector */}
-                    <select
-                      value={selectedChain}
-                      onChange={handleChainChange}
-                      className="px-4 py-4 rounded-xl bg-white/30 backdrop-blur-md border border-white/30 text-black focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-300 cursor-pointer"
-                      style={{ 
-                        fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif',
-                        width: '180px'
-                      }}
-                    >
-                      {chainOptions.map((chain) => (
-                        <option key={chain.id} value={chain.id} className="bg-slate-800 text-white">
-                          {chain.name}
-                        </option>
-                      ))}
-                    </select>
+                  {transferEntries.map((entry, idx) => (
+                    <div key={entry.id} className="flex gap-3 items-center w-full">
+                      <div className="w-20 flex gap-2 items-center">
+                        {transferEntries.length > 1 && (
+                          <button type="button" onClick={() => removeEntry(entry.id)} className="px-3 py-2 rounded-md bg-red-200 text-red-800">−</button>
+                        )}
+                      </div>
+
+                      <select
+                        value={entry.token}
+                        onChange={(e) => updateEntry(entry.id, { token: e.target.value as 'USDC' | 'ETH' })}
+                        className="px-4 py-3 rounded-xl bg-white/30 backdrop-blur-md border border-white/30 text-black focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-300 cursor-pointer"
+                        style={{ width: '110px' }}
+                      >
+                        {tokenOptions.map((token) => (
+                          <option key={token.symbol} value={token.symbol} className="bg-slate-800 text-white">{token.symbol}</option>
+                        ))}
+                      </select>
+
+                      <input
+                        type="text"
+                        value={entry.amount}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (value === '' || /^\d*\.?\d*$/.test(value)) updateEntry(entry.id, { amount: value });
+                        }}
+                        placeholder="Enter amount"
+                        className="px-6 py-3 rounded-xl bg-white/30 backdrop-blur-md border border-white/30 text-black placeholder-black/50 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-300 flex-grow"
+                        style={{ minWidth: '120px' }}
+                      />
+
+                      <div className="flex items-center gap-2">
+                        <select
+                          value={entry.chain}
+                          onChange={(e) => updateEntry(entry.id, { chain: Number(e.target.value) })}
+                          className="px-4 py-3 rounded-xl bg-white/30 backdrop-blur-md border border-white/30 text-black focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-300 cursor-pointer"
+                          style={{ width: '180px' }}
+                        >
+                        {chainOptions.map((chain) => (
+                          <option key={chain.id} value={chain.id} className="bg-slate-800 text-white">{chain.name}</option>
+                        ))}
+                      </select>
+
+                        {/* Per-row Send Arrow Button (styled like Send All) */}
+                        <button
+                          type="button"
+                          onClick={async () => {
+                            if (!recipientAddress || !isValidAddress) return;
+                            if (!entry.amount || parseFloat(entry.amount) <= 0) return;
+                            const handler = transferHandlers.current[entry.id];
+                            if (!handler) {
+                              console.warn('No handler available for entry', entry);
+                              return;
+                            }
+                            try {
+                              const maybePromise = handler();
+                              if (maybePromise && typeof (maybePromise as Promise<any>).then === 'function') {
+                                await (maybePromise as Promise<any>);
+                              }
+                            } catch (err) {
+                              console.error('Transfer failed for entry', entry, err);
+                            }
+                          }}
+                          disabled={!recipientAddress || !isValidAddress || !entry.amount || parseFloat(entry.amount || '0') <= 0}
+                          className="relative font-inherit overflow-hidden transition-all duration-300"
+                          style={{
+                            fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif',
+                            fontSize: '15px',
+                            padding: '0.45em 1.2em',
+                            letterSpacing: '0.06em',
+                            borderRadius: '0.6em',
+                            lineHeight: '1.2em',
+                            border: '2px solid #06b6d4',
+                            background: 'linear-gradient(to right, rgba(6, 182, 212, 0.1) 1%, transparent 40%, transparent 60%, rgba(6, 182, 212, 0.1) 100%)',
+                            color: '#06b6d4',
+                          }}
+                        >
+                          →
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Single Add (+) Button centered below the entries (below middle) */}
+                  <div className="flex w-full justify-center mt-2">
+                    <button type="button" onClick={addEntry} className="px-3 py-2 rounded-md bg-green-200 text-green-800">+</button>
                   </div>
                 </div>
 
-                <div className="flex justify-center">
-                  {recipientAddress && isValidAddress && transferAmount && parseFloat(transferAmount) > 0 ? (
+                {/* Hidden TransferButton instances used to collect onClick handlers for each entry */}
+                <div style={{ display: 'none' }}>
+                  {transferEntries.map((entry) => (
                     <TransferButton
+                      key={entry.id}
                       prefill={{
-                        chainId: selectedChain as 11155420 | 80002 | 421614 | 84532 | 11155111 | 10143,
-                        token: selectedToken as 'USDC' | 'ETH',
-                      amount: transferAmount,
-                      recipient: recipientAddress as `0x${string}`,
-                    }}
-                  >
-                    {({ onClick, isLoading }) => (
-                      <button
-                        onClick={onClick}
-                        disabled={isLoading}
-                        className="relative font-inherit overflow-hidden transition-all duration-300"
-                        style={{ 
-                          fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif',
-                          fontSize: '15px',
-                          padding: '0.7em 2.7em',
-                          letterSpacing: '0.06em',
-                          borderRadius: '0.6em',
-                          lineHeight: '1.4em',
-                          border: '2px solid #06b6d4',
-                          background: 'linear-gradient(to right, rgba(6, 182, 212, 0.1) 1%, transparent 40%, transparent 60%, rgba(6, 182, 212, 0.1) 100%)',
-                          color: '#06b6d4',
-                          boxShadow: 'inset 0 0 10px rgba(6, 182, 212, 0.4), 0 0 9px 3px rgba(6, 182, 212, 0.1)',
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.color = '#22d3ee';
-                          e.currentTarget.style.boxShadow = 'inset 0 0 10px rgba(6, 182, 212, 0.6), 0 0 9px 3px rgba(6, 182, 212, 0.2)';
-                          const span = e.currentTarget.querySelector('span');
-                          if (span) span.style.transform = 'translateX(15em)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.color = '#06b6d4';
-                          e.currentTarget.style.boxShadow = 'inset 0 0 10px rgba(6, 182, 212, 0.4), 0 0 9px 3px rgba(6, 182, 212, 0.1)';
-                          const span = e.currentTarget.querySelector('span');
-                          if (span) span.style.transform = 'translateX(0)';
-                        }}
-                      >
-                        <span 
-                          className="absolute left-[-4em] w-16 h-full top-0 transition-transform duration-400 ease-in-out"
-                          style={{
-                            background: 'linear-gradient(to right, transparent 1%, rgba(6, 182, 212, 0.1) 40%, rgba(6, 182, 212, 0.1) 60%, transparent 100%)',
-                          }}
-                        />
-                        {isLoading ? 'Sending…' : `Send ${transferAmount} ${selectedToken}`}
-                      </button>
-                    )}
-                  </TransferButton>
-                ) : (
-                  <button 
-                    disabled 
-                    className="relative font-inherit overflow-hidden opacity-50 cursor-not-allowed"
-                    style={{ 
-                      fontFamily: 'Nasalization, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif',
-                      fontSize: '15px',
-                      padding: '0.7em 2.7em',
-                      letterSpacing: '0.06em',
-                      borderRadius: '0.6em',
-                      lineHeight: '1.4em',
-                      border: '2px solid #374151',
-                      background: 'linear-gradient(to right, rgba(55, 65, 81, 0.1) 1%, transparent 40%, transparent 60%, rgba(55, 65, 81, 0.1) 100%)',
-                      color: '#111827',
-                      boxShadow: 'inset 0 0 10px rgba(55, 65, 81, 0.4), 0 0 9px 3px rgba(55, 65, 81, 0.1)',
-                    }}
-                  >
-                    {recipientAddress === '' 
-                      ? 'Enter Address to continue' 
-                      : !isValidAddress 
-                        ? 'Invalid Address Format'
-                        : transferAmount === '' || parseFloat(transferAmount) <= 0
-                          ? 'Enter Amount'
-                          : 'Ready to Send'
-                    }
-                  </button>
-                  )}
+                        chainId: entry.chain as 11155420 | 80002 | 421614 | 84532 | 11155111 | 10143,
+                        token: entry.token as 'USDC' | 'ETH',
+                        amount: entry.amount,
+                        recipient: recipientAddress as `0x${string}`,
+                      }}
+                    >
+                      {({ onClick }) => {
+                        // capture the handler so we can invoke it from the per-row send button
+                        transferHandlers.current[entry.id] = onClick;
+                        return null;
+                      }}
+                    </TransferButton>
+                  ))}
                 </div>
               </div>
             ) : (
