@@ -17,7 +17,7 @@ export default function Home() {
     { id: String(Date.now()), token: 'USDC', amount: '', chain: 11155420 },
   ]);
   // Refs to store TransferButton onClick handlers for each entry
-  const transferHandlers = useRef<Record<string, (() => any) | undefined>>({});
+  const transferHandlers = useRef<Record<string, (() => Promise<void> | void) | undefined>>({});
   const [isValidAddress, setIsValidAddress] = useState<boolean>(false);
   const shuffleRef = useRef<HTMLElement>(null);
   const textTypeRef = useRef<HTMLElement>(null);
@@ -372,7 +372,7 @@ export default function Home() {
                     Amounts & Destination Chains
                   </label>
 
-                  {transferEntries.map((entry, idx) => (
+                  {transferEntries.map((entry) => (
                     <div key={entry.id} className="flex gap-3 items-center w-full">
                       <div className="w-20 flex gap-2 items-center">
                         {transferEntries.length > 1 && (
@@ -428,8 +428,8 @@ export default function Home() {
                             }
                             try {
                               const maybePromise = handler();
-                              if (maybePromise && typeof (maybePromise as Promise<any>).then === 'function') {
-                                await (maybePromise as Promise<any>);
+                              if (maybePromise && typeof (maybePromise as Promise<void>).then === 'function') {
+                                await (maybePromise as Promise<void>);
                               }
                             } catch (err) {
                               console.error('Transfer failed for entry', entry, err);
