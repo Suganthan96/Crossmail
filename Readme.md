@@ -1,6 +1,6 @@
 # MailPay - Email-to-Crypto Transaction System
 
-> **🚀 Submitted for ETHOnline 2025** - A revolutionary decentralized email-to-cryptocurrency transaction system that enables seamless blockchain transactions through Gmail integration. Send crypto assets as easily as composing an email.
+> ** Submitted for ETHOnline 2025** - A revolutionary decentralized email-to-cryptocurrency transaction system that enables seamless blockchain transactions through Gmail integration. Send crypto assets as easily as composing an email.
 
 ## Project Overview
 
