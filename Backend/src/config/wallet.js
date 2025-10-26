@@ -28,6 +28,16 @@ const NETWORKS = {
     rpc: 'https://sepolia-rollup.arbitrum.io/rpc',
     chainId: 421614,
     explorer: 'https://sepolia.arbiscan.io'
+  },
+  pyusdSepolia: {
+    name: 'PYUSD Sepolia',
+    rpc: 'https://ethereum-sepolia-rpc.publicnode.com',
+    chainId: 11155111,
+    explorer: 'https://mail-pay.cloud.blockscout.com',
+    minAmount: 1, // 1 PYUSD minimum
+    tokenSymbol: 'PYUSD',
+    tokenName: 'PayPal USD',
+    isToken: true
   }
 };
 
