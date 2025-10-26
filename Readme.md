@@ -1,15 +1,15 @@
 # MailPay - Email-to-Crypto Transaction System
 
-A revolutionary decentralized email-to-cryptocurrency transaction system that enables seamless blockchain transactions through Gmail integration. Send crypto assets as easily as composing an email.
+> **🚀 Submitted for ETHOnline 2025** - A revolutionary decentralized email-to-cryptocurrency transaction system that enables seamless blockchain transactions through Gmail integration. Send crypto assets as easily as composing an email.
 
 ## Project Overview
 
 MailPay is an innovative blockchain-enabled communication system that bridges traditional email with cryptocurrency transactions. Users can execute cryptocurrency transfers by simply composing an email, leveraging Gmail OAuth2 authentication and MetaMask wallet integration for secure, user-friendly digital asset transfers.
 
 ## Partners
-1. Avail ![AVAIL_FEEDBACK.md](https://github.com/austinjeremiah/Mailpay/blob/main/Backend/AVAIL_FEEDBACK.md)
-2. BlockScout
-3. Paypal
+1. **Avail** - [View Feedback Documentation](https://github.com/austinjeremiah/Mailpay/blob/main/Backend/AVAIL_FEEDBACK.md)
+2. **BlockScout** - Custom blockchain explorer integration
+3. **PayPal** - PYUSD token support
 
 ## Architecture
 
