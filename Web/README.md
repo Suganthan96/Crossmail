@@ -72,38 +72,78 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 - Optimism Sepolia (recommended for testing)
 - Arbitrum Sepolia (for Aave pool interactions)
-- Other chains (manual testing required)
+# Mailpay — Web
 
-## Support
+This folder contains the frontend for the Mailpay project. It's a Next.js application (TypeScript + React) that powers the web widget and UI for Mailpay.
 
-For further assistance, contact the development team on Discord:
+Key technologies
+- Next.js 15
+- React 19
+- TypeScript
+- Tailwind CSS
+- styled-components
+- 3D / animation libraries (three, gsap, @react-three/fiber)
+- Web3 tooling (wagmi, viem, connectkit)
 
-- **Robin**: 
-- **Narutto**: Available on Discord server
+Quick status
+- Project name from package.json: `nexus-test`
+- Scripts available: `dev`, `build`, `start`, `lint`
 
-## Learn More About Next.js
+Requirements
+- Node.js (v18+ recommended)
+- npm, pnpm or yarn (a `pnpm-lock.yaml` exists in the repository root)
 
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Learn Next.js](https://nextjs.org/learn)
-- [Next.js GitHub Repository](https://github.com/vercel/next.js)
+Install and run (PowerShell)
+```powershell
+# from repo root
+cd Web
+# install dependencies (use pnpm if you prefer)
+npm install
+# start dev server
+npm run dev
+```
 
-## Deployment
+Build and run production
+```powershell
+cd Web
+npm run build
+npm run start
+```
 
-Deploy your application on [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme).
+Linting
+```powershell
+cd Web
+npm run lint
+```
 
-See [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Helpful notes
+- Configuration files in this folder:
+  - `next.config.ts` — Next.js configuration
+  - `tsconfig.json` — TypeScript configuration
+  - Tailwind/PostCSS files at the project root are used by the app
+- If you run into problems:
+  - Ensure Node version >= 18.
+  - Remove `node_modules` and reinstall (PowerShell: `Remove-Item -Recurse -Force node_modules`).
+  - Clear Next cache: remove `.next` directory before building again.
+
+Developer tips
+- Use `pnpm install` for deterministic installs (a `pnpm-lock.yaml` is included in the repo root).
+- The project mixes Tailwind and styled-components — check `globals.css` and the component styles in `src`.
+
+Where to look next
+- `src/app` — Next app routes and widgets
+- `src/components` — shared components and UI primitives
+- `public` — static assets
+
+Contributing
+- Follow the existing code style and run lint before opening PRs.
+- Add tests and README updates for new features or major dependency changes.
+
+License and author
+- See repository root for license and author information.
 
 ---
 
-**Project Structure**
-```
-nexus-test/
-├── src/
-│   └── app/
-│       ├── providers.tsx          # Wallet provider configuration
-│       └── components/
-│           └── bridge-test.tsx    # Main bridge functionality
-└── README.md
-```
+If you relied on the original Nexus SDK starter content in this file, most of that information (wallet provider notes, bridging components) may still be relevant; check `src/app/providers.tsx` and `src/app/components` for any Nexus widget or bridge-related components.
 
-Thank you with regards @imaustin04 ( discord )
+Thank you — the Mailpay team
