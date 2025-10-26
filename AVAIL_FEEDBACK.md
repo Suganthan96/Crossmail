@@ -1,5 +1,4 @@
-# Avail Nexus SDK - Developer Feedback - Bounty Report
-
+# Avail Nexus SDK - Developer Feedback 
 *ETHGlobal Hackathon* 
 
 ---
