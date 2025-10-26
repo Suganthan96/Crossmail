@@ -1,6 +1,6 @@
-# CrossMail Backend
+# Mailpay Backend
 
-Backend server for CrossMail - Connect MetaMask wallet with Gmail for blockchain transaction notifications.
+Backend server for Mailpay - Connect MetaMask wallet with Gmail for blockchain transaction notifications.
 
 ## Features
 
@@ -136,7 +136,7 @@ curl -X POST http://localhost:3001/api/gmail/send \
   -d '{
     "to": "recipient@example.com",
     "subject": "Test Email",
-    "body": "This is a test email from CrossMail"
+    "body": "This is a test email from Mailpay"
   }'
 ```
 
@@ -180,6 +180,4 @@ npm start      # Start production server
 - Check OAuth scopes are correct
 - Ensure tokens are fresh (re-authenticate if needed)
 
-## License
 
-MIT

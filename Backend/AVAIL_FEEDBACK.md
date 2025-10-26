@@ -30,6 +30,7 @@ Transaction failed to execute. This might be a temporary network issue.
 
 - *Impact:* Poor UX, actual errors hidden
 - *Needed:* Better error surfacing, retry logic, clear user guidance
+
 ![App Screenshot](https://github.com/austinjeremiah/Mailpay/blob/main/Backend/Public/img3.jpg?raw=true)
 
 ---

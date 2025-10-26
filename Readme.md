@@ -6,6 +6,11 @@ A revolutionary decentralized email-to-cryptocurrency transaction system that en
 
 MailPay is an innovative blockchain-enabled communication system that bridges traditional email with cryptocurrency transactions. Users can execute cryptocurrency transfers by simply composing an email, leveraging Gmail OAuth2 authentication and MetaMask wallet integration for secure, user-friendly digital asset transfers.
 
+## Partners
+1. Avail (AVAIL_FEEDBACK.md)
+2. BlockScout
+3, Paypal 
+
 ## Architecture
 
 The system consists of three core components working in harmony:
